@@ -26,10 +26,10 @@ void my_prinf(char *input_string, ...){
     if (current == '%'){
       //create pointers for each of the different fields and set equal to NULL. The pointer will remain NULL if no sub-specifier is indicated for the field
       char * flag = NULL;
-      int * width = NULL;
-      int * precision = NULL;
+      char * width = NULL;
+      char * precision = NULL;
       char * length = NULL;
-      char specifier = NULL; // the specifier is stored as a character, not a pointer
+      char specifier = '\0'; // the specifier is stored as a character, not a pointer, and has in initial null character value
 
       string ++; //increment string to point to the next character after the %
       
@@ -41,18 +41,19 @@ void my_prinf(char *input_string, ...){
       while (((*string >= 48) && (*string <= 57))||(*string == '*')) string++; //increment string until the end of the width specifiers are reached
 
       if (*string == '.') precision = string;
-      while ((*string == '*')((*string >= 48) && (*string <= 57))) string++;
+      while ((*string == '*')||((*string >= 48) && (*string <= 57))) string++;
 
       if ((*string == 'h')||(*string == 'l')||(*string == 'j')||(*string == 'z')||(*string == 't')) length = string;
       while ((*string == 'h')||(*string == 'l')||(*string == 'j')||(*string == 'z')||(*string == 't')) string++;
 
-      if (*string == 'd') specifier = d;
-      if (*string == 'x') specifier = x;
-      if (*string == 'c') specifier = c;
-      if (*string == 's') specifier = s;
+      if (*string == 'd') specifier = 'd';
+      if (*string == 'x') specifier = 'x';
+      if (*string == 'c') specifier = 'c';
+      if (*string == 's') specifier = 's';
 
       string++; //increment the string pointer -- now pointing to the next character to be printed
-      
+
+      //add function here to take in all the pointers and args list and output the correct output to the console
     }
     
      
@@ -85,7 +86,14 @@ void iterating_string(char *input_string){
   }
 }
 
+// check the pointers to each specifier field is working
+      if (flag != NULL) putchar(*flag);
+      if (width != NULL) putchar(*width);
+      if (precision != NULL) putchar(*precision);
+      if (length != NULL) putchar(*length);
+      putchar(specifier);
 
+      
 
 // check va_list is working
   while (1) {
