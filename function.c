@@ -1,6 +1,28 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+//make sure that throws error if not one of the 4 data types
+//make sure throws error if any mistake with any of the specifiers
+//make sure throws error if tries to retireve from va_list and hits 0 (end of the list) i.e. there were not enough arguments specified by their function call
+//make sure that if the general function returns with things still on va_list to throw a warning message
+//indicate that I made the choice that if an unknown specifier is used it is ignored and no error message is thrown back
+
+//functions to deal with each data type and their specifiers
+void decimal_int(va_list * args, char * flag, char * width, char * precision, char * length){
+}
+
+void hexadecimal_int(va_list * args, char * flag, char * width, char * precision, char * length){
+}
+
+void character(va_list * args, char * flag, char * width, char * precision, char * length){
+}
+
+void string(va_list * args, char * flag, char * width, char * precision, char * length){
+}
+
+
+
+
 void my_prinf(char *input_string, ...){
   char * string = input_string; //The variable "string" now points to the first character in the string
   
@@ -21,7 +43,7 @@ void my_prinf(char *input_string, ...){
       string ++; //increments the pointer
     }
 
-    //add thing for %%
+    //ADD THING FOR %%
 
     if (current == '%'){
       //create pointers for each of the different fields and set equal to NULL. The pointer will remain NULL if no sub-specifier is indicated for the field
@@ -46,6 +68,7 @@ void my_prinf(char *input_string, ...){
       if ((*string == 'h')||(*string == 'l')||(*string == 'j')||(*string == 'z')||(*string == 't')) length = string;
       while ((*string == 'h')||(*string == 'l')||(*string == 'j')||(*string == 'z')||(*string == 't')) string++;
 
+      //CAN CUT THIS OUT -- AND PERGE WITH THE BELOW, ALSO ADD A CHECK FIRST TO MAKE SURE THAT AT THIS POINT YOU ACTUALLY HIT ONE OF THE 4 OPTIONS BELOW
       if (*string == 'd') specifier = 'd';
       if (*string == 'x') specifier = 'x';
       if (*string == 'c') specifier = 'c';
@@ -53,7 +76,12 @@ void my_prinf(char *input_string, ...){
 
       string++; //increment the string pointer -- now pointing to the next character to be printed
 
-      //add function here to take in all the pointers and args list and output the correct output to the console
+      // functions to deal with the data type, argument from args, and specifications 
+      if (specifier == 'd') decimal_int(&args, flag, width, precision, length);
+      if (specifier == 'x') hexadecimal_int(&args, flag, width, precision, length);
+      if (specifier == 'c') character(&args, flag, width, precision, length);
+      if (specifier == 's') string(&args, flag, width, precision, length);
+      // when the function returns, string is set to the next character to print and va_list is set so va_arg will retrieve the next argument on the stack
     }
     
      
@@ -62,15 +90,16 @@ void my_prinf(char *input_string, ...){
 
  
   //va_arg(args, type) retrieves the next argument of that type in the list
-
   va_end(args); //clean up the va_list
   
 }
 
 
+
+
+
 int main() {
 }
-
 
 
 
