@@ -21,8 +21,40 @@ void my_prinf(char *input_string, ...){
       string ++; //increments the pointer
     }
 
-    //add code here to save the modifier values -- what each is -- and pass into function dependent on data type
-    // update the string pointer accordingly
+    //add thing for %%
+
+    if (current == '%'){
+      //create pointers for each of the different fields and set equal to NULL. The pointer will remain NULL if no sub-specifier is indicated for the field
+      char * flag = NULL;
+      int * width = NULL;
+      int * precision = NULL;
+      char * length = NULL;
+      char specifier = NULL; // the specifier is stored as a character, not a pointer
+
+      string ++; //increment string to point to the next character after the %
+      
+      //Set each pointer to the first character in that field
+      if ((*string == '-')||(*string == '+')||(*string == '#')||(*string == '0')) flag = string; //set flag to point to the first flag
+      while ((*string == '-')||(*string == '+')||(*string == '#')||(*string == '0')) string++; //increment string until the end of the flags are reached
+
+      if (((*string >= 48) && (*string <= 57))||(*string == '*')) width = string; //set width to point to the first width specifier
+      while (((*string >= 48) && (*string <= 57))||(*string == '*')) string++; //increment string until the end of the width specifiers are reached
+
+      if (*string == '.') precision = string;
+      while ((*string == '*')((*string >= 48) && (*string <= 57))) string++;
+
+      if ((*string == 'h')||(*string == 'l')||(*string == 'j')||(*string == 'z')||(*string == 't')) length = string;
+      while ((*string == 'h')||(*string == 'l')||(*string == 'j')||(*string == 'z')||(*string == 't')) string++;
+
+      if (*string == 'd') specifier = d;
+      if (*string == 'x') specifier = x;
+      if (*string == 'c') specifier = c;
+      if (*string == 's') specifier = s;
+
+      string++; //increment the string pointer -- now pointing to the next character to be printed
+      
+    }
+    
      
     
   }
