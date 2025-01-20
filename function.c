@@ -43,7 +43,7 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   if ((precision != NULL) && (*precision == '.') && (*(precision + 1) == '*')) p = va_arg(args, int);
   if (*precision == "."){
     precision++;
-    //while still in this field and still a number
+    //while still in this field and still a number (if no number specified, remains zero)
     while ((precision != length) && (precision != stop) && (*string >= 48) && (*string <= 57)){ 
       p = (p*10) + (*precision - '0'); 
       precision++;
