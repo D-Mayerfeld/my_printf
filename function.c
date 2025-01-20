@@ -11,9 +11,20 @@
 //functions to deal with each data type and their specifiers
 void decimal_int(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
   
-  // add anything here that would require you to pop more than one thing from args
+  //Width -- must come first because might pop an element from the argument list
+  int w = 0;
+  // if the width field has a "*" then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
+  if ((width != NULL) && (width == '*')) w = va_arg(args, int);
+    else {
+    while ((width != precision) && ((width != length) && ((width != stop)){
+      w = (W*10) + (*width - '0'); 
+      width++;
+    }
+  }
+     
   
   int decimal = va_arg(args, int);
+  
   // CHECK THAT NEXT ARGUMENT MATCHES TYPE AND IF NOT THROW BACK AN ERROR
   
   
@@ -32,10 +43,7 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
     flag++; 
   }
 
-  //Width
-  while ((width != NULL) && (width != precision) && ((width != length) && ((width != stop)){
-    
-  }
+  
 
 
 
