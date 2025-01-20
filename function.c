@@ -11,16 +11,34 @@
 //functions to deal with each data type and their specifiers
 void decimal_int(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
   
-  //Width -- must come first because might pop an element from the argument list
+  //Width (might pop an element from the argument list)
   int w = 0;
+  char * widthCopy = width;
   // if the width field has a "*" then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
-  if ((width != NULL) && (width == '*')) w = va_arg(args, int);
+  if ((width != NULL) && (*width == '*')) w = va_arg(args, int);
     else {
-    while ((width != precision) && ((width != length) && ((width != stop)){
-      w = (W*10) + (*width - '0'); 
+    while ((width != precision) && (width != length) && (width != stop)){
+      w = (w*10) + (*width - '0'); 
       width++;
     }
   }
+
+  //Precision -- (might pop an element from the argument list)
+  int p = 0;
+  // if the width field has a "*" then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
+  if ((precision != NULL) && (*precision == '.') && (*(precision + 1) == '*')) p = va_arg(args, int);
+  if (*precision == "."){
+    precision++;
+    //while still in this field and still a number
+    while ((precision != length) && (precision != stop) && (*string >= 48) && (*string <= 57)){ 
+      p = (p*10) + (*precision - '0'); 
+      precision++;
+    }
+  }
+    
+  
+
+//make sure all of above copy their original pointer and increment the copy, not the actual pointer... -- copy the pointer without linking them and do the same for the stop pointer
      
   
   int decimal = va_arg(args, int);
