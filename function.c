@@ -27,22 +27,24 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   }
   
   //Width (might pop an element from the argument list)
+  //ADD ERROR IF YOU HAVE A STAR AND THEN A NUMBER AFTER IT
   int w = 0;
   // if the width field has a "*" then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
-  if ((width != NULL) && (*width == '*')) w = va_arg(args, int);
+  if ((width != NULL) && (*width == '*')) w = va_arg(args, int)
     else {
-    while ((width != precision) && (width != length) && (width != stop)){
-      w = (w*10) + (*width - '0'); 
-      width++;
+      while ((width != precision) && (width != length) && (width != stop)){
+        w = (w*10) + (*width - '0'); 
+        width++;
+      }
     }
-  }
 
   //Precision -- (might pop an element from the argument list)
-  int p = 0;
+  int p = -1; //NULL value
   // if the width field has a "*" then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
   if ((precision != NULL) && (*precision == '.') && (*(precision + 1) == '*')) p = va_arg(args, int);
   if (*precision == "."){
     precision++;
+    p = 0;
     //while still in this field and still a number (if no number specified, remains zero)
     while ((precision != length) && (precision != stop) && (*string >= 48) && (*string <= 57)){ 
       p = (p*10) + (*precision - '0'); 
@@ -61,6 +63,40 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   
   // CHECK THAT NEXT ARGUMENT MATCHES TYPE AND IF NOT THROW BACK AN ERROR -- FIGURE OUT HOW TO DO THIS
   
+  // intializing variables for printing
+  int decimalLength = 0; //length of the decimal number to be printed 
+  int numFlags = 0; //amount of characters added by flags, and negative sign if negative
+  _Bool negative = False; //if number is negative
+  int paddingZeros = 0; //number of zeros to add
+  int numSpaces = 0; //number of spaces to add
+
+  // update decimalLength and negative variables
+  if (decimal == 0) decimalLength = 1
+    else {
+      if (decimal < 0){
+        negative = True;
+        decimal = -decimal;
+      }
+      while (decimal != 0){
+        decimal /= 10;
+        decimalLength++;
+      }
+    }
+
+  // update numFlags 
+  if ((plus == True) || (negative == True) || (space == True)) numFlags = 1; 
+
+  //update paddingZeros and numSpaces
+  //ADD FOR CASE WHERE P=0
+  if (decimalLength + numFlags) < p){
+    if ()
+  }
+    //deal with interaction of 0 flag, width, and left justification -- specifically if left justified and padded with zeros (what happnes?)
+
+
+    
+   
+
   
 
 
