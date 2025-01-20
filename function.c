@@ -6,18 +6,51 @@
 //make sure throws error if tries to retireve from va_list and hits 0 (end of the list) i.e. there were not enough arguments specified by their function call
 //make sure that if the general function returns with things still on va_list to throw a warning message
 //indicate that I made the choice that if an unknown specifier is used it is ignored and no error message is thrown back
+// make sure negative numbers naturally print with a negative sign
 
 //functions to deal with each data type and their specifiers
-void decimal_int(va_list * args, char * flag, char * width, char * precision, char * length){
+void decimal_int(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
+  
+  // add anything here that would require you to pop more than one thing from args
+  
+  int decimal = va_arg(args, int);
+  // CHECK THAT NEXT ARGUMENT MATCHES TYPE AND IF NOT THROW BACK AN ERROR
+  
+  
+  // Flags
+  // While still in flag field and have not hit the start of another field, process each flag
+  _Bool leftJ = False; // This will be set to true if justification is specified (because infomation is needed from the width field before printing)
+  _Bool plus = False; // add plus sign before number
+  _Bool space = False; // if no sign will be written add space before value
+  _Bool zero = False;
+  while ((flag != NULL) && (flag != width) && (flag != precision) && (flag != length) && (flag != stop)){
+    if (*flag == '-') leftJ = True;
+    if (*flag == '+') plus = True;
+    if ((*flag == ' ') && (decimal >= 0) && (plus == False)) space = True; // only applies if no sign is otherwise printed
+    if (*flag == '0') zero = True;
+    
+    flag++; 
+  }
+
+  //Width
+  while ((width != NULL) && (width != precision) && ((width != length) && ((width != stop)){
+    
+  }
+
+
+
+
+
+  
 }
 
-void hexadecimal_int(va_list * args, char * flag, char * width, char * precision, char * length){
+void hexadecimal_int(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
 }
 
-void character(va_list * args, char * flag, char * width, char * precision, char * length){
+void character(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
 }
 
-void string(va_list * args, char * flag, char * width, char * precision, char * length){
+void string(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
 }
 
 
@@ -35,7 +68,7 @@ void my_prinf(char *input_string, ...){
   //Loop through the string and write to stdout
   char current; //initializes a variable to store the current character in from the string
   while(*string != '\0'){
-    current = *string; //current points to that is stored in the memory location
+    current = *string; //current points to what is stored in the memory location
 
     // While we are up to a regular character, print the character to the stdout
     if (current != '%'){
@@ -51,7 +84,7 @@ void my_prinf(char *input_string, ...){
       char * width = NULL;
       char * precision = NULL;
       char * length = NULL;
-      char specifier = '\0'; // the specifier is stored as a character, not a pointer, and has in initial null character value
+      char specifier = '\0'; // the specifier is stored as a character, not a pointer, and has an initial null character value
 
       string ++; //increment string to point to the next character after the %
       
@@ -68,7 +101,7 @@ void my_prinf(char *input_string, ...){
       if ((*string == 'h')||(*string == 'l')||(*string == 'j')||(*string == 'z')||(*string == 't')) length = string;
       while ((*string == 'h')||(*string == 'l')||(*string == 'j')||(*string == 'z')||(*string == 't')) string++;
 
-      //CAN CUT THIS OUT -- AND PERGE WITH THE BELOW, ALSO ADD A CHECK FIRST TO MAKE SURE THAT AT THIS POINT YOU ACTUALLY HIT ONE OF THE 4 OPTIONS BELOW
+      //CAN CUT THIS OUT -- AND MERGE WITH THE BELOW, ALSO ADD A CHECK FIRST TO MAKE SURE THAT AT THIS POINT YOU ACTUALLY HIT ONE OF THE 4 OPTIONS BELOW
       if (*string == 'd') specifier = 'd';
       if (*string == 'x') specifier = 'x';
       if (*string == 'c') specifier = 'c';
@@ -76,11 +109,12 @@ void my_prinf(char *input_string, ...){
 
       string++; //increment the string pointer -- now pointing to the next character to be printed
 
+      char * stop = string; // the variable next contains a copy of the pointer in the string to be used in the functions below
       // functions to deal with the data type, argument from args, and specifications 
-      if (specifier == 'd') decimal_int(&args, flag, width, precision, length);
-      if (specifier == 'x') hexadecimal_int(&args, flag, width, precision, length);
-      if (specifier == 'c') character(&args, flag, width, precision, length);
-      if (specifier == 's') string(&args, flag, width, precision, length);
+      if (specifier == 'd') decimal_int(&args, flag, width, precision, length, stop);
+      if (specifier == 'x') hexadecimal_int(&args, flag, width, precision, length, stop);
+      if (specifier == 'c') character(&args, flag, width, precision, length, stop);
+      if (specifier == 's') string(&args, flag, width, precision, length, stop);
       // when the function returns, string is set to the next character to print and va_list is set so va_arg will retrieve the next argument on the stack
     }
     
