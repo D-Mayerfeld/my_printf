@@ -39,7 +39,7 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   
 
 //make sure all of above copy their original pointer and increment the copy, not the actual pointer... -- copy the pointer without linking them and do the same for the stop pointer
-     
+// or, put flags first and just save everything and do the checking about sign later so that this is run before you pop the actual value -- i.e. before any of the other pointers are touched.     
   
   int decimal = va_arg(args, int);
   
