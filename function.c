@@ -10,10 +10,24 @@
 
 //functions to deal with each data type and their specifiers
 void decimal_int(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
+
+  // Flags
+  // While still in flag field and have not hit the start of another field, process each flag
+  _Bool leftJ = False; // This will be set to true if justification is specified (because infomation is needed from the width field before printing)
+  _Bool plus = False; // add plus sign before number
+  _Bool space = False; // if no sign will be written add space before value
+  _Bool zero = False;
+  while ((flag != NULL) && (flag != width) && (flag != precision) && (flag != length) && (flag != stop)){
+    if (*flag == '-') leftJ = True;
+    if (*flag == '+') plus = True;
+    if ((*flag == ' ') && (plus == False)) space = True; // only applies if no sign is otherwise printed CHECK LATER THAT NOT NEGATIVE (ONLY ADD SPACE IF NOT NEGATIVE)
+    if (*flag == '0') zero = True;
+    
+    flag++; 
+  }
   
   //Width (might pop an element from the argument list)
   int w = 0;
-  char * widthCopy = width;
   // if the width field has a "*" then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
   if ((width != NULL) && (*width == '*')) w = va_arg(args, int);
     else {
@@ -35,31 +49,20 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
       precision++;
     }
   }
-    
+
+  //MUST ADD SOMETHING HERE TO ACCOUNT FOR ERROR TYPES -- LIKE WHAT IF PUT hhh OR hl... -- for now will only format if exact and nothing afterward (next increment hits stop), but write error message otherwise and remember that will only get here if only allowed letters
+  //NOT ALLOWING J,Z,T OPTIONS -- MAKE NOTE OF THAT
+  //Length (determine length and pop the decimal value)
+  if (length == NULL) int decimal = va_arg(args, int);
+  if ((*length == "h") && (*(length+1) == "h") && ((length+2) == stop)) signed char decimal = va_arg(args, int);
+  if ((*length == "h") && ((length+1) == stop)) short int decimal = va_arg(args, int);
+  if ((*length == "l") && ((length+1) == stop)) long int decimal = va_arg(args, long int);
+  if ((*length == "l") && (*(length+1) == "l") && ((length+2) == stop)) long long int decimal = va_arg(args, long long int);
+  
+  // CHECK THAT NEXT ARGUMENT MATCHES TYPE AND IF NOT THROW BACK AN ERROR -- FIGURE OUT HOW TO DO THIS
+  
   
 
-//make sure all of above copy their original pointer and increment the copy, not the actual pointer... -- copy the pointer without linking them and do the same for the stop pointer
-// or, put flags first and just save everything and do the checking about sign later so that this is run before you pop the actual value -- i.e. before any of the other pointers are touched.     
-  
-  int decimal = va_arg(args, int);
-  
-  // CHECK THAT NEXT ARGUMENT MATCHES TYPE AND IF NOT THROW BACK AN ERROR
-  
-  
-  // Flags
-  // While still in flag field and have not hit the start of another field, process each flag
-  _Bool leftJ = False; // This will be set to true if justification is specified (because infomation is needed from the width field before printing)
-  _Bool plus = False; // add plus sign before number
-  _Bool space = False; // if no sign will be written add space before value
-  _Bool zero = False;
-  while ((flag != NULL) && (flag != width) && (flag != precision) && (flag != length) && (flag != stop)){
-    if (*flag == '-') leftJ = True;
-    if (*flag == '+') plus = True;
-    if ((*flag == ' ') && (decimal >= 0) && (plus == False)) space = True; // only applies if no sign is otherwise printed
-    if (*flag == '0') zero = True;
-    
-    flag++; 
-  }
 
   
 
@@ -124,8 +127,8 @@ void my_prinf(char *input_string, ...){
       if (*string == '.') precision = string;
       while ((*string == '*')||((*string >= 48) && (*string <= 57))) string++;
 
-      if ((*string == 'h')||(*string == 'l')||(*string == 'j')||(*string == 'z')||(*string == 't')) length = string;
-      while ((*string == 'h')||(*string == 'l')||(*string == 'j')||(*string == 'z')||(*string == 't')) string++;
+      if ((*string == 'h')||(*string == 'l')) length = string;
+      while ((*string == 'h')||(*string == 'l')) string++;
 
       //CAN CUT THIS OUT -- AND MERGE WITH THE BELOW, ALSO ADD A CHECK FIRST TO MAKE SURE THAT AT THIS POINT YOU ACTUALLY HIT ONE OF THE 4 OPTIONS BELOW
       if (*string == 'd') specifier = 'd';
