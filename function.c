@@ -101,27 +101,47 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   }
 
   //print spaces if right justified
+  if (leftJ == True) {
+    while (numSpaces != 0){
+      putchar(" ");
+      numSpaces--;
+    }
+  }
+  
   //print sign (neg, plus from flag, space from flag)
+  if (negative == True) putchar("-");
+  if ((plus == True) && (negative == False)) putchar("+");
+  if ((space == True) && (negative == False)) putchar(" "); //don't have to check that plus is False as space can't be True if plus is False
+  
   //print leading zeros
-  //print the decimal number 
-  //print spaces if right justified
+  while (paddingZeros != 0){
+    putchar("0")
+    paddingZeros--;
+  }
   
-
+  //print the decimal number
+  if (decimal == 0) putchar("0")
+    else{
+      char digits[decimalLength + 1];
+      digits[decimalLength] = "\0"; //add null terminator to the string
+      //decimal int to string
+      for (int i = decimalLength - 1; i >= 0; i--){
+        digits[i] = (decimal % 10) + "0";
+        decimal /+ 10;
+      }
+      //print the string to the output
+      for (int i = 0; digits[i] != "\0"; i++){
+        putchar(digits[i]);
+      }
+    }
   
-
-   
-   
-
-  
-
-
-  
-
-
-
-
-
-  
+  //print spaces if left justified
+  if (leftJ == False) {
+    while (numSpaces != 0){
+      putchar(" ");
+      numSpaces--;
+    }
+  }  
 }
 
 void hexadecimal_int(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
