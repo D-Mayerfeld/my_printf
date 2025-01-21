@@ -23,7 +23,7 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
     if ((*flag == ' ') && (plus == False)) space = True; // only applies if no sign is otherwise printed CHECK LATER THAT NOT NEGATIVE (ONLY ADD SPACE IF NOT NEGATIVE)
     if (*flag == '0') zero = True;
 
-    // IF INDICATE BOTH "-" AND "0" IN FLAG FIELD THEN THROW ERROR
+    // IF INDICATE BOTH '-' AND '0' IN FLAG FIELD THEN THROW ERROR
     
     flag++; 
   }
@@ -31,7 +31,7 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   //Width (might pop an element from the argument list)
   //ADD ERROR IF YOU HAVE A STAR AND THEN A NUMBER AFTER IT
   int w = 0;
-  // if the width field has a "*" then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
+  // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
   if ((width != NULL) && (*width == '*')) w = va_arg(args, int)
     else {
       while ((width != precision) && (width != length) && (width != stop)){
@@ -42,9 +42,9 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
 
   //Precision -- (might pop an element from the argument list)
   int p = -1; //NULL value
-  // if the width field has a "*" then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
+  // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
   if ((precision != NULL) && (*precision == '.') && (*(precision + 1) == '*')) p = va_arg(args, int);
-  if (*precision == "."){
+  if (*precision == '.'){
     precision++;
     p = 0;
     //while still in this field and still a number (if no number specified, remains zero)
@@ -58,10 +58,10 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   //NOT ALLOWING J,Z,T OPTIONS -- MAKE NOTE OF THAT
   //Length (determine length and pop the decimal value)
   if (length == NULL) int decimal = va_arg(args, int);
-  if ((*length == "h") && (*(length+1) == "h") && ((length+2) == stop)) signed char decimal = va_arg(args, int);
-  if ((*length == "h") && ((length+1) == stop)) short int decimal = va_arg(args, int);
-  if ((*length == "l") && ((length+1) == stop)) long int decimal = va_arg(args, long int);
-  if ((*length == "l") && (*(length+1) == "l") && ((length+2) == stop)) long long int decimal = va_arg(args, long long int);
+  if ((*length == 'h') && (*(length+1) == 'h') && ((length+2) == stop)) signed char decimal = va_arg(args, int);
+  if ((*length == 'h') && ((length+1) == stop)) short int decimal = va_arg(args, int);
+  if ((*length == 'l') && ((length+1) == stop)) long int decimal = va_arg(args, long int);
+  if ((*length == 'l') && (*(length+1) == 'l') && ((length+2) == stop)) long long int decimal = va_arg(args, long long int);
   
   // CHECK THAT NEXT ARGUMENT MATCHES TYPE AND IF NOT THROW BACK AN ERROR -- FIGURE OUT HOW TO DO THIS
   
@@ -89,7 +89,6 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   if ((plus == True) || (negative == True) || (space == True)) numFlags = 1; 
 
   //update paddingZeros and numSpaces
-  //ADD FOR CASE WHERE P=0
   //first check for precision and update padding zeros
   if ((decimalLength + numFlags) < p){
     paddingZeros += (p-(decimalLength + numFlags));
@@ -103,34 +102,35 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   //print spaces if right justified
   if (leftJ == True) {
     while (numSpaces != 0){
-      putchar(" ");
+      putchar(' ');
       numSpaces--;
     }
   }
   
   //print sign (neg, plus from flag, space from flag)
-  if (negative == True) putchar("-");
-  if ((plus == True) && (negative == False)) putchar("+");
-  if ((space == True) && (negative == False)) putchar(" "); //don't have to check that plus is False as space can't be True if plus is False
+  if (negative == True) putchar('-');
+  if ((plus == True) && (negative == False)) putchar('+');
+  if ((space == True) && (negative == False)) putchar(' '); //don't have to check that plus is False as space can't be True if plus is False
   
   //print leading zeros
   while (paddingZeros != 0){
-    putchar("0")
+    putchar('0')
     paddingZeros--;
   }
   
   //print the decimal number
-  if (decimal == 0) putchar("0")
-    else{
+  if (decimal == 0){
+    if (p != 0) putchar('0')
+  } else{
       char digits[decimalLength + 1];
-      digits[decimalLength] = "\0"; //add null terminator to the string
+      digits[decimalLength] = '\0'; //add null terminator to the string
       //decimal int to string
       for (int i = decimalLength - 1; i >= 0; i--){
-        digits[i] = (decimal % 10) + "0";
+        digits[i] = (decimal % 10) + '0';
         decimal /+ 10;
       }
       //print the string to the output
-      for (int i = 0; digits[i] != "\0"; i++){
+      for (int i = 0; digits[i] != '\0'; i++){
         putchar(digits[i]);
       }
     }
@@ -138,7 +138,7 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   //print spaces if left justified
   if (leftJ == False) {
     while (numSpaces != 0){
-      putchar(" ");
+      putchar(' ');
       numSpaces--;
     }
   }  
