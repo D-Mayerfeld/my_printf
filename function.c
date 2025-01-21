@@ -22,6 +22,8 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
     if (*flag == '+') plus = True;
     if ((*flag == ' ') && (plus == False)) space = True; // only applies if no sign is otherwise printed CHECK LATER THAT NOT NEGATIVE (ONLY ADD SPACE IF NOT NEGATIVE)
     if (*flag == '0') zero = True;
+
+    // IF INDICATE BOTH "-" AND "0" IN FLAG FIELD THEN THROW ERROR
     
     flag++; 
   }
@@ -88,13 +90,17 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
 
   //update paddingZeros and numSpaces
   //ADD FOR CASE WHERE P=0
-  if (decimalLength + numFlags) < p){
-    if ()
+  //first check for precision and update padding zeros
+  if ((decimalLength + numFlags) < p){
+    paddingZeros += (p-(decimalLength + numFlags));
   }
-    //deal with interaction of 0 flag, width, and left justification -- specifically if left justified and padded with zeros (what happnes?)
+  // add spaces or padding zeros based on indicated width and if 0 flag is indicated
+  if ((decimalLength + numFlags + paddingZeros) < w){
+    if (zero == True) paddingZeros += (w-((decimalLength + numFlags + paddingZeros)))
+      else paddingZeros = (w-((decimalLength + numFlags + paddingZeros));
+  }
 
-
-    
+   
    
 
   
