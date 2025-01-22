@@ -114,7 +114,7 @@ void decimal_int(va_list args, char * flag, char * width, char * precision, char
   // add spaces or padding zeros based on indicated width and if 0 flag is indicated
   if ((decimalLength + numFlags + paddingZeros) < w){
     if (zero == True) paddingZeros += (w-(decimalLength + numFlags + paddingZeros));
-      else paddingZeros = (w-(decimalLength + numFlags + paddingZeros));
+      else numSpaces = (w-(decimalLength + numFlags + paddingZeros));
   }
 
   //print spaces if right justified
