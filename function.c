@@ -47,7 +47,7 @@ void decimal_int(va_list args, char * flag, char * width, char * precision, char
   int p = -1; //NULL value
   // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
   if ((precision != NULL) && (*precision == '.') && (*(precision + 1) == '*')) p = va_arg(args, int);
-  if (*precision == '.'){
+  else if (precision && (*precision == '.')){
     precision++;
     p = 0;
     //while still in this field and still a number (if no number specified, remains zero)
