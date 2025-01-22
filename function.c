@@ -143,14 +143,20 @@ void decimal_int(va_list args, char * flag, char * width, char * precision, char
   else{
       char digits[decimalLength + 1];
       digits[decimalLength] = '\0'; //add null terminator to the string
+      
       //decimal int to string
-      for (int i = decimalLength - 1; i >= 0; i--){
+      int i = decimalLength - 1;
+      while (i >= 0){
         digits[i] = (decimal % 10) + '0';
-        decimal /+ 10;
+        decimal /= 10;
+        i--;  
       }
+      
       //print the string to the output
-      for (int i = 0; digits[i] != '\0'; i++){
-        putchar(digits[i]);
+      int j = 0;
+      while (digits[j] != '\0'){
+        putchar(digits[j]);
+        j++;
       }
     }
   
