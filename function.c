@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#define False 0
+#define True 1
+
 //make sure that throws error if not one of the 4 data types
 //make sure throws error if any mistake with any of the specifiers
 //make sure throws error if tries to retireve from va_list and hits 0 (end of the list) i.e. there were not enough arguments specified by their function call
@@ -9,7 +12,7 @@
 // make sure negative numbers naturally print with a negative sign
 
 //functions to deal with each data type and their specifiers
-void decimal_int(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
+void decimal_int(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
 
   // Flags
   // While still in flag field and have not hit the start of another field, process each flag
@@ -32,7 +35,7 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   //ADD ERROR IF YOU HAVE A STAR AND THEN A NUMBER AFTER IT
   int w = 0;
   // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
-  if ((width != NULL) && (*width == '*')) w = va_arg(args, int)
+  if ((width != NULL) && (*width == '*')) w = va_arg(args, int);
     else {
       while ((width != precision) && (width != length) && (width != stop)){
         w = (w*10) + (*width - '0'); 
@@ -48,7 +51,7 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
     precision++;
     p = 0;
     //while still in this field and still a number (if no number specified, remains zero)
-    while ((precision != length) && (precision != stop) && (*string >= 48) && (*string <= 57)){ 
+    while ((precision != length) && (precision != stop) && (*precision >= 48) && (*precision <= 57)){ 
       p = (p*10) + (*precision - '0'); 
       precision++;
     }
@@ -57,11 +60,25 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   //MUST ADD SOMETHING HERE TO ACCOUNT FOR ERROR TYPES -- LIKE WHAT IF PUT hhh OR hl... -- for now will only format if exact and nothing afterward (next increment hits stop), but write error message otherwise and remember that will only get here if only allowed letters
   //NOT ALLOWING J,Z,T OPTIONS -- MAKE NOTE OF THAT
   //Length (determine length and pop the decimal value)
-  if (length == NULL) int decimal = va_arg(args, int);
-  if ((*length == 'h') && (*(length+1) == 'h') && ((length+2) == stop)) signed char decimal = va_arg(args, int);
-  if ((*length == 'h') && ((length+1) == stop)) short int decimal = va_arg(args, int);
-  if ((*length == 'l') && ((length+1) == stop)) long int decimal = va_arg(args, long int);
-  if ((*length == 'l') && (*(length+1) == 'l') && ((length+2) == stop)) long long int decimal = va_arg(args, long long int);
+  int decimal; //declare variable 
+  if (length == NULL){
+    decimal = va_arg(args, int);
+  } 
+  else if ((*length == 'h') && (*(length+1) == 'h') && ((length+2) == stop)){
+    decimal = (signed char)va_arg(args, int);
+  } 
+  else if ((*length == 'h') && ((length+1) == stop)){
+    decimal = (short int)va_arg(args, int);
+  } 
+  else if ((*length == 'l') && ((length+1) == stop)){
+    decimal = (long int)va_arg(args, long int);
+  } 
+  else if ((*length == 'l') && (*(length+1) == 'l') && ((length+2) == stop)){
+    decimal = (long long int)va_arg(args, long long int);
+  } 
+  // else {
+  //THROW ERROR
+  //}
   
   // CHECK THAT NEXT ARGUMENT MATCHES TYPE AND IF NOT THROW BACK AN ERROR -- FIGURE OUT HOW TO DO THIS
   
@@ -73,14 +90,15 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   int numSpaces = 0; //number of spaces to add
 
   // update decimalLength and negative variables
-  if (decimal == 0) decimalLength = 1
+  if (decimal == 0) decimalLength = 1;
     else {
       if (decimal < 0){
         negative = True;
         decimal = -decimal;
       }
-      while (decimal != 0){
-        decimal /= 10;
+      int decimalCopy = decimal; //make a copy so it does not alter the value stored in decimal
+      while (decimalCopy != 0){
+        decimalCopy /= 10;
         decimalLength++;
       }
     }
@@ -95,7 +113,7 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   }
   // add spaces or padding zeros based on indicated width and if 0 flag is indicated
   if ((decimalLength + numFlags + paddingZeros) < w){
-    if (zero == True) paddingZeros += (w-(decimalLength + numFlags + paddingZeros))
+    if (zero == True) paddingZeros += (w-(decimalLength + numFlags + paddingZeros));
       else paddingZeros = (w-(decimalLength + numFlags + paddingZeros));
   }
 
@@ -114,14 +132,15 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   
   //print leading zeros
   while (paddingZeros != 0){
-    putchar('0')
+    putchar('0');
     paddingZeros--;
   }
   
   //print the decimal number
   if (decimal == 0){
-    if (p != 0) putchar('0')
-  } else{
+    if (p != 0) putchar('0');
+  } 
+  else{
       char digits[decimalLength + 1];
       digits[decimalLength] = '\0'; //add null terminator to the string
       //decimal int to string
@@ -144,13 +163,13 @@ void decimal_int(va_list * args, char * flag, char * width, char * precision, ch
   }  
 }
 
-void hexadecimal_int(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
+void hexadecimal_int(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
 }
 
-void character(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
+void character(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
 }
 
-void string(va_list * args, char * flag, char * width, char * precision, char * length, char *stop){
+void strings(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
 }
 
 
@@ -211,10 +230,10 @@ void my_prinf(char *input_string, ...){
 
       char * stop = string; // the variable next contains a copy of the pointer in the string to be used in the functions below
       // functions to deal with the data type, argument from args, and specifications 
-      if (specifier == 'd') decimal_int(&args, flag, width, precision, length, stop);
-      if (specifier == 'x') hexadecimal_int(&args, flag, width, precision, length, stop);
-      if (specifier == 'c') character(&args, flag, width, precision, length, stop);
-      if (specifier == 's') string(&args, flag, width, precision, length, stop);
+      if (specifier == 'd') decimal_int(args, flag, width, precision, length, stop);
+      if (specifier == 'x') hexadecimal_int(args, flag, width, precision, length, stop);
+      if (specifier == 'c') character(args, flag, width, precision, length, stop);
+      if (specifier == 's') strings(args, flag, width, precision, length, stop);
       // when the function returns, string is set to the next character to print and va_list is set so va_arg will retrieve the next argument on the stack
     }
     
