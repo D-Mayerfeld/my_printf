@@ -208,7 +208,8 @@ void my_prinf(char *input_string, ...){
       string ++; //increment string to point to the next character after the %
       
       //Set each pointer to the first character in that field
-      if ((*string == '-')||(*string == '+')||(*string == '#')||(*string == '0')) flag = string; //set flag to point to the first flag
+      //DEAL WITH CASE IF INSERT ## OR ++ --> THROW AN ERROR OR MAKE SURE DOESN'T WORK
+      if ((*string == '-')||(*string == '+')||(*string == '#')||(*string == '0')||(*string == ' ')) flag = string; //set flag to point to the first flag
       while ((*string == '-')||(*string == '+')||(*string == '#')||(*string == '0')) string++; //increment string until the end of the flags are reached
 
       if (((*string >= 48) && (*string <= 57))||(*string == '*')) width = string; //set width to point to the first width specifier
