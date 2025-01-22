@@ -259,15 +259,27 @@ void my_prinf(char *input_string, ...){
 
 
 int main() {
+  //testing width -- with right justification and zero flag
+  /*my_prinf("Hello %-04d there", 31);
+  my_prinf("Hello %04d there", 31);
+  my_prinf("Hello %-4d there", 31);
+  
+  //testing width -- simple
+  my_prinf("Hello %*d there", 5, 31);
+  my_prinf("Hello %4d there", 31);
+  my_prinf("Hello %2d there", 31);
+  my_prinf("Hello %1d there", 31);
+  my_prinf("Hello %1d there", 1);
+  
   //testing flags -- simple
-  /*my_prinf("Hello %0d there", -1);
+  my_prinf("Hello %0d there", -1);
   my_prinf("Hello %#d there", -1);
   my_prinf("Hello % d there", 1);
   my_prinf("Hello % d there", -1);
   my_prinf("Hello %+d there", -1);
   my_prinf("Hello %+d there", 1);
   my_prinf("Hello %-d there", 1);
-    
+  
   //testing modifier
   my_prinf("Hello %d there", 1); //with text after placeholder
   my_prinf("Hello %d", 1); 
