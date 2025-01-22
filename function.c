@@ -37,7 +37,7 @@ void decimal_int(va_list args, char * flag, char * width, char * precision, char
   // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
   if ((width != NULL) && (*width == '*')) w = va_arg(args, int);
     else {
-      while ((width != precision) && (width != length) && (width != stop)){
+      while ((width != NULL) && (width != precision) && (width != length) && (width != stop)){
         w = (w*10) + (*width - '0'); 
         width++;
       }
@@ -227,9 +227,9 @@ void my_prinf(char *input_string, ...){
       if (*string == 'c') specifier = 'c';
       if (*string == 's') specifier = 's';
 
+      char * stop = string; // the variable next contains a copy of the pointer in the string to be used in the functions below
       string++; //increment the string pointer -- now pointing to the next character to be printed
 
-      char * stop = string; // the variable next contains a copy of the pointer in the string to be used in the functions below
       // functions to deal with the data type, argument from args, and specifications 
       if (specifier == 'd') decimal_int(args, flag, width, precision, length, stop);
       if (specifier == 'x') hexadecimal_int(args, flag, width, precision, length, stop);
