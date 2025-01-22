@@ -210,7 +210,7 @@ void my_prinf(char *input_string, ...){
       //Set each pointer to the first character in that field
       //DEAL WITH CASE IF INSERT ## OR ++ --> THROW AN ERROR OR MAKE SURE DOESN'T WORK
       if ((*string == '-')||(*string == '+')||(*string == '#')||(*string == '0')||(*string == ' ')) flag = string; //set flag to point to the first flag
-      while ((*string == '-')||(*string == '+')||(*string == '#')||(*string == '0')) string++; //increment string until the end of the flags are reached
+      while ((*string == '-')||(*string == '+')||(*string == '#')||(*string == '0')||(*string == ' ')) string++; //increment string until the end of the flags are reached
 
       if (((*string >= 48) && (*string <= 57))||(*string == '*')) width = string; //set width to point to the first width specifier
       while (((*string >= 48) && (*string <= 57))||(*string == '*')) string++; //increment string until the end of the width specifiers are reached
