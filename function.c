@@ -253,6 +253,19 @@ void my_prinf(char *input_string, ...){
 
 
 int main() {
+  //testing flags -- simple
+  /*my_prinf("Hello %0d there", -1);
+  my_prinf("Hello %#d there", -1);
+  my_prinf("Hello % d there", 1);
+  my_prinf("Hello % d there", -1);
+  my_prinf("Hello %+d there", -1);
+  my_prinf("Hello %+d there", 1);
+  my_prinf("Hello %-d there", 1);
+    
+  //testing modifier
+  my_prinf("Hello %d there", 1); //with text after placeholder
+  my_prinf("Hello %d", 1); 
+  my_prinf("Hello");*/
 }
 
 
