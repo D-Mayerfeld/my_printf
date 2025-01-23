@@ -221,7 +221,10 @@ void my_prinf(char *input_string, ...){
       if (((*string >= 48) && (*string <= 57))||(*string == '*')) width = string; //set width to point to the first width specifier
       while (((*string >= 48) && (*string <= 57))||(*string == '*')) string++; //increment string until the end of the width specifiers are reached
 
-      if (*string == '.') precision = string;
+      if (*string == '.'){
+        precision = string;
+        string++;
+      } 
       while ((*string == '*')||((*string >= 48) && (*string <= 57))) string++;
 
       if ((*string == 'h')||(*string == 'l')) length = string;
