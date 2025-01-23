@@ -200,7 +200,7 @@ int strings(va_list args, char * flag, char * width, char * precision, char * le
 
 
 int my_prinf(char *input_string, ...){
-  int numPrintedChar = 0; //the function willl return this value which keeps track of the number of characters written
+  int numPrintedChar = 0; //the function will return this value which keeps track of the number of characters written
   
   char * string = input_string; //The variable "string" now points to the first character in the string
   
@@ -222,9 +222,14 @@ int my_prinf(char *input_string, ...){
       string ++; //increments the pointer
     }
 
-    //ADD THING FOR %%
+    //If %% print one %
+    else if ((current == '%') && ((*(string+1) == '%'))){
+      putchar('%');
+      numPrintedChar++; 
+      string = string + 2; //increments the pointer
+    }
 
-    if (current == '%'){
+    else if (current == '%'){
       //create pointers for each of the different fields and set equal to NULL. The pointer will remain NULL if no sub-specifier is indicated for the field
       char * flag = NULL;
       char * width = NULL;
@@ -251,20 +256,21 @@ int my_prinf(char *input_string, ...){
       if ((*string == 'h')||(*string == 'l')) length = string;
       while ((*string == 'h')||(*string == 'l')) string++;
 
-      //CAN CUT THIS OUT -- AND MERGE WITH THE BELOW, ALSO ADD A CHECK FIRST TO MAKE SURE THAT AT THIS POINT YOU ACTUALLY HIT ONE OF THE 4 OPTIONS BELOW
+      //set the specifier
       if (*string == 'd') specifier = 'd';
-      if (*string == 'x') specifier = 'x';
-      if (*string == 'c') specifier = 'c';
-      if (*string == 's') specifier = 's';
+      else if (*string == 'x') specifier = 'x';
+      else if (*string == 'c') specifier = 'c';
+      else if (*string == 's') specifier = 's';
 
       char * stop = string; // the variable next contains a copy of the pointer in the string to be used in the functions below
       string++; //increment the string pointer -- now pointing to the next character to be printed
 
       // functions to deal with the data type, argument from args, and specifications 
       if (specifier == 'd') numPrintedChar += decimal_int(args, flag, width, precision, length, stop);
-      if (specifier == 'x') numPrintedChar += hexadecimal_int(args, flag, width, precision, length, stop);
-      if (specifier == 'c') numPrintedChar +=character(args, flag, width, precision, length, stop);
-      if (specifier == 's') numPrintedChar += strings(args, flag, width, precision, length, stop);
+      else if (specifier == 'x') numPrintedChar += hexadecimal_int(args, flag, width, precision, length, stop);
+      else if (specifier == 'c') numPrintedChar +=character(args, flag, width, precision, length, stop);
+      else if (specifier == 's') numPrintedChar += strings(args, flag, width, precision, length, stop);
+      //ELSE IF NONE OF ABOVE THROW ERROR
       // when the function returns, string is set to the next character to print and va_list is set so va_arg will retrieve the next argument on the stack
     }
     
@@ -285,8 +291,11 @@ int my_prinf(char *input_string, ...){
 
 
 int main() {
+  //testing %%
+  /*my_prinf("Hello %ld %% there", 2028465);
+  
   //testing specifiers
-  /*my_prinf("Hello %lld there", 645650090);
+  my_prinf("Hello %lld there", 645650090);
   my_prinf("Hello %ld there", 2028465);
   my_prinf("Hello %hd there", 2);
   my_prinf("Hello %hhd there", -3);
