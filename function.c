@@ -240,7 +240,7 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
   if ((precision != NULL) && (precision != length) && (precision != stop)) return -1; //if there was .* and then a number, throw an error
 
   //Length (determine length and pop the decimal value)
-  int hex; //declare variable 
+  long long int hex = 0; //declare variable 
   if (length == NULL){
     hex = va_arg(args, unsigned int);
   } 
@@ -271,13 +271,13 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
     hexLength = 8;
     negative = True;
   }
-    else {  
-      int hexCopy = hex; //make a copy so it does not alter the value stored in decimal
-      while (hexCopy != 0){
-        hexCopy >>= 4; //divide by 16 (right shift by 4 bits)
-        hexLength++;
-      }
+  else {  
+    long long int hexCopy = hex; //make a copy so it does not alter the value stored in decimal
+    while (hexCopy != 0){
+      hexCopy >>= 4; //divide by 16 (right shift by 4 bits)
+      hexLength++;
     }
+  }
 
   // update numFlags 
   if ((hex != 0) && (hashtag == True)) numFlags = 2; 
@@ -485,6 +485,9 @@ int my_printf(char *input_string, ...){
 
 int main() {
   //testing hexadecimal_int
+  my_printf("hi %llx there", 508325423427);
+  printf("\nhi %llx there", 508325423427);
+  /*//testing hexadecimal_int
   printf("hi %x there", -5);
   //my_printf("hi %x there", -3233);
   printf("\n");
@@ -576,7 +579,7 @@ int main() {
   my_printf("Hello %d", 1); 
   printf("\n");
   my_printf("Hello");
-  printf("\n");
+  printf("\n");*/
 }
 
 
