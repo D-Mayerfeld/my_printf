@@ -40,7 +40,6 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
   if (leftJ == True) zero = False; //If the '-' flag is indicated, the '0' flag is ignored
   
   //Width (might pop an element from the argument list)
-  //ADD ERROR IF YOU HAVE A STAR AND THEN A NUMBER AFTER IT
   int w = 0;
   // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
   if ((width != NULL) && (*width == '*')) {
@@ -59,15 +58,16 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
   int p = -1; //NULL value
   // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
   if ((precision != NULL) && (*precision == '.') && (*(precision + 1) == '*')) p = va_arg(args, int);
-  else if (precision && (*precision == '.')){
+  else if ((precision != NULL) && (*precision == '.')){
     precision++;
     p = 0;
     //while still in this field and still a number (if no number specified, remains zero)
-    while ((precision != length) && (precision != stop) && (*precision >= 48) && (*precision <= 57)){ 
+    while ((precision != length) && (precision != stop) && (*precision >= 48) && (*precision <= 57)){
       p = (p*10) + (*precision - '0'); 
       precision++;
-    }
+    }    
   }
+  if ((precision != NULL) && (precision != length) && (precision != stop)) return -1; //if there was .* and then a number, throw an error
 
   //Length (determine length and pop the decimal value)
   int decimal; //declare variable 
@@ -297,6 +297,10 @@ int my_printf(char *input_string, ...){
 
 
 int main() {
+  //testing precision -- if .* and then number throw error
+  my_printf("Hello %.*5d there", 3);
+  printf("\n");
+  
   //testing width -- if * and then a number
   my_printf("Hello %*4d there", 3, 2);
   printf("\n");
