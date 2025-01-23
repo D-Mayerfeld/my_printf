@@ -242,8 +242,7 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
       precision++;
     }    
   }
-  if ((precision != NULL) && (precision != length) && (precision != stop)) return -1; //if there was .* and then a number, throw an error
-
+  
   //Length (determine length and pop the decimal value)
   long long int hex = 0; //declare variable 
   if (length == NULL){
@@ -321,7 +320,7 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
     charPrintedCounter++;
   }
 
-  //print the decimal number
+  //print the hex number
   if (hex == 0){
     if (p != 0) {
       putchar('0');
@@ -385,6 +384,78 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
 }
 
 int character(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
+  int charPrintedCounter = 0; //will be added to numPrintedChar when the function returns to the old function
+
+  // Flags
+  // While still in flag field and have not hit the start of another field, process each flag
+  _Bool leftJ = False; // This will be set to true if justification is specified (because infomation is needed from the width field before printing)
+  _Bool plus = False; // add plus sign before number
+  _Bool space = False; // if no sign will be written add space before value
+  _Bool zero = False;
+  _Bool hashtag = False; //in this data type if present it is an error and will print everything otherwise, but will return the error code of -1
+  while ((flag != NULL) && (flag != width) && (flag != precision) && (flag != length) && (flag != stop)){
+    if (*flag == '-') leftJ = True;
+    else if (*flag == '+') plus = True;
+    else if (*flag == ' ') space = True; // only applies if no sign is otherwise printed 
+    else if (*flag == '0') zero = True;  
+    else if (*flag == '#') hashtag = True;
+    flag++; 
+  }
+  
+  //Width (might pop an element from the argument list)
+  int w = 0;
+  // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
+  if ((width != NULL) && (*width == '*')) {
+    w = va_arg(args, int);
+    //throw an error if width was indicated with a * and a number after it (which will get past the pointers in the my_printf function)
+    if ((*(width+1) >= 48) && (*(width+1) <= 57)) return -1;
+  }
+    else {
+      while ((width != NULL) && (width != precision) && (width != length) && (width != stop)){
+        w = (w*10) + (*width - '0'); 
+        width++;
+      }
+    }
+
+  //Precision -- does not work with this data type, so check if pointer set and if so return -1 error, but print the character
+  _Bool p = False; 
+  if (precision != NULL) p = True; 
+
+  //get the character
+  int character = va_arg(args, unsigned int);
+  
+  // intializing variables for printing
+  int numSpaces = 0; //number of spaces to add
+
+  //update numSpaces based on width
+  if (w > 1){
+    numSpaces = (w-1);
+  }
+
+  //print spaces if right justified
+  if (leftJ == False) {
+    while (numSpaces != 0){
+      putchar(' ');
+      numSpaces--;
+      charPrintedCounter++;
+    }
+  } 
+
+  //print the character
+  putchar(character);
+  charPrintedCounter++;
+  
+  //print spaces if left justified
+  if (leftJ == True) {
+    while (numSpaces != 0){
+      putchar(' ');
+      numSpaces--;
+      charPrintedCounter++;
+    }
+  } 
+
+  if ((space == True) || (plus == True) || (hashtag == True) || (zero == True) || (p == True) || (length != NULL)) return -1; //flag issue, char is still printed, but return -1
+  else return charPrintedCounter;
 }
 
 int strings(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
@@ -489,10 +560,19 @@ int my_printf(char *input_string, ...){
 
 
 int main() {
-  //testing hexadecimal_int
+  
+  printf("%c \n", '5');
+
+  //char ignores the 0,+,space,# flags and only recognizes - flag. It also does not recognize precision or length modifiers
+  //hex ignores the + flag and space, but recognizes -,#,0. If 0,- are both indicated, 0 is ignored
+  //Furthermore, 0 flag is ignored if precision is set
+
+
+  
+  /*//testing hexadecimal_int
   my_printf("hi %llx there", 508325423427);
   printf("\nhi %llx there", 508325423427);
-  /*//testing hexadecimal_int
+  //testing hexadecimal_int
   printf("hi %x there", -5);
   //my_printf("hi %x there", -3233);
   printf("\n");
@@ -586,36 +666,3 @@ int main() {
   my_printf("Hello");
   printf("\n");*/
 }
-
-
-
-/* EXTRA CODE
-
-// check string is working and iterate through it
-void iterating_string(char *input_string){
-  char *string = input_string; //The variable "string" now points to the first character in the string
-  char current; //initializes a variable to store the current character in from the string
-  for(string; *string != '\0'; string++){
-    current = *string;
-    putchar(current);
-  }
-}
-
-// check the pointers to each specifier field is working
-      if (flag != NULL) putchar(*flag);
-      if (width != NULL) putchar(*width);
-      if (precision != NULL) putchar(*precision);
-      if (length != NULL) putchar(*length);
-      putchar(specifier);
-
-      
-
-// check va_list is working
-  while (1) {
-    int value = va_arg(args, int);
-    if (value == 0){
-      break;
-    }
-    printf("%d\n", value);
-  }
-*/
