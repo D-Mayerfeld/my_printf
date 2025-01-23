@@ -1,5 +1,8 @@
 /*
 The function returns the number of characters printed. If error encountered, returns -1
+Note that if you input too few parameters, the function will run, but will produce unexpected behavior. 
+//NOT ALLOWING J,Z,T OPTIONS -- MAKE NOTE OF THAT
+// if in the length field indicate the wrong type, or wrong type anywhere in function will not return error and will get unexpected behavior
 
 My changes: 
 1. If an error occurs, it still prints everything up to where the error was encountered
@@ -11,7 +14,6 @@ My changes:
 #define False 0
 #define True 1
 
-//make sure that throws error if not one of the 4 data types
 //make sure throws error if any mistake with any of the specifiers
 //make sure throws error if tries to retireve from va_list and hits 0 (end of the list) i.e. there were not enough arguments specified by their function call -- BOTH IN GENERAL FUNCTION IF TOO MANY %s AND ALSO IN DECIMAL FUNCTION IF USE * TO RETRIEVE SECOND AREGUMENT
 //make sure that if the general function returns with things still on va_list to throw a warning message
@@ -30,20 +32,22 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
   _Bool zero = False;
   while ((flag != NULL) && (flag != width) && (flag != precision) && (flag != length) && (flag != stop)){
     if (*flag == '-') leftJ = True;
-    if (*flag == '+') plus = True;
-    if ((*flag == ' ') && (plus == False)) space = True; // only applies if no sign is otherwise printed CHECK LATER THAT NOT NEGATIVE (ONLY ADD SPACE IF NOT NEGATIVE)
-    if (*flag == '0') zero = True;
-
-    // IF INDICATE BOTH '-' AND '0' IN FLAG FIELD THEN THROW ERROR
-    
+    else if (*flag == '+') plus = True;
+    else if ((*flag == ' ') && (plus == False)) space = True; // only applies if no sign is otherwise printed 
+    else if (*flag == '0') zero = True;    
     flag++; 
   }
+  if (leftJ == True) zero = False; //If the '-' flag is indicated, the '0' flag is ignored
   
   //Width (might pop an element from the argument list)
   //ADD ERROR IF YOU HAVE A STAR AND THEN A NUMBER AFTER IT
   int w = 0;
   // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
-  if ((width != NULL) && (*width == '*')) w = va_arg(args, int);
+  if ((width != NULL) && (*width == '*')) {
+    w = va_arg(args, int);
+    //throw an error if width was indicated with a * and a number after it (which will get past the pointers in the my_printf function)
+    if ((*(width+1) >= 48) && (*(width+1) <= 57)) return -1;
+  }
     else {
       while ((width != NULL) && (width != precision) && (width != length) && (width != stop)){
         w = (w*10) + (*width - '0'); 
@@ -65,8 +69,6 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
     }
   }
 
-  //MUST ADD SOMETHING HERE TO ACCOUNT FOR ERROR TYPES -- LIKE WHAT IF PUT hhh OR hl... -- for now will only format if exact and nothing afterward (next increment hits stop), but write error message otherwise and remember that will only get here if only allowed letters
-  //NOT ALLOWING J,Z,T OPTIONS -- MAKE NOTE OF THAT
   //Length (determine length and pop the decimal value)
   int decimal; //declare variable 
   if (length == NULL){
@@ -84,11 +86,7 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
   else if ((*length == 'l') && (*(length+1) == 'l') && ((length+2) == stop)){
     decimal = (long long int)va_arg(args, long long int);
   } 
-  // else {
-  //THROW ERROR
-  //}
-  
-  // CHECK THAT NEXT ARGUMENT MATCHES TYPE AND IF NOT THROW BACK AN ERROR -- FIGURE OUT HOW TO DO THIS
+  else return -1;
   
   // intializing variables for printing
   int decimalLength = 0; //length of the decimal number to be printed 
@@ -215,7 +213,7 @@ int my_printf(char *input_string, ...){
   va_list args;
 
   // Initialize the argument list
-  va_start(args, 0); // the last value in the list is 0, indicating the end of the list
+  va_start(args, input_string); // the last value in the list is 0, indicating the end of the list
 
   //Loop through the string and write to stdout
   char current; //initializes a variable to store the current character in from the string
@@ -273,24 +271,25 @@ int my_printf(char *input_string, ...){
       string++; //increment the string pointer -- now pointing to the next character to be printed
 
       // functions to deal with the data type, argument from args, and specifications 
-      if (specifier == 'd') numPrintedChar += decimal_int(args, flag, width, precision, length, stop);
-      else if (specifier == 'x') numPrintedChar += hexadecimal_int(args, flag, width, precision, length, stop);
-      else if (specifier == 'c') numPrintedChar +=character(args, flag, width, precision, length, stop);
-      else if (specifier == 's') numPrintedChar += strings(args, flag, width, precision, length, stop);
-      //ELSE IF NONE OF ABOVE THROW ERROR
+      int charPrinted = 0;
+      if (specifier == 'd') charPrinted = decimal_int(args, flag, width, precision, length, stop);
+      else if (specifier == 'x') charPrinted = hexadecimal_int(args, flag, width, precision, length, stop);
+      else if (specifier == 'c') charPrinted = character(args, flag, width, precision, length, stop);
+      else if (specifier == 's') charPrinted = strings(args, flag, width, precision, length, stop);
+      else return -1; //If the specifier is not d, x, c, or s, then return -1 to indicate an error
+
+      // if one of the functions returns with an error (returns -1) then exit the function and return -1 to indicate an error
+      if (charPrinted == -1) return -1;
+      else numPrintedChar += charPrinted;
+      
       // when the function returns, string is set to the next character to print and va_list is set so va_arg will retrieve the next argument on the stack
     }
     
-     
-    
   }
 
- 
-  //va_arg(args, type) retrieves the next argument of that type in the list
+  //If the function completed successfully, clean up va_list and return the number of printed characters.
   va_end(args); //clean up the va_list
-
   return numPrintedChar;
-  
 }
 
 
@@ -298,6 +297,9 @@ int my_printf(char *input_string, ...){
 
 
 int main() {
+  //testing '-' flag with '0' flag (ignore '0' flag in this case)
+  my_printf("Hello %-04d there", 3);
+  
   //testing %%
   /*my_printf("Hello %ld %% there", 2028465);
   
