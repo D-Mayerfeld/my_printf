@@ -2,7 +2,7 @@
 The function returns the number of characters printed. If error encountered, returns -1
 
 My changes: 
-1. If an error occurs, it still prints everything else
+1. If an error occurs, it still prints everything up to where the error was encountered
 */
 
 #include <stdio.h>
