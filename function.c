@@ -5,7 +5,7 @@ Note that if you input too few parameters, the function will run, but will produ
 // if in the length field indicate the wrong type, or wrong type anywhere in function will not return error and will get unexpected behavior
 
 My changes: 
-1. If an error occurs, it still prints everything up to where the error was encountered
+1. If an error occurs, it still prints everything up to where the error was encountered and stops printing immediately
 */
 
 #include <stdio.h>
@@ -24,11 +24,13 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
   _Bool plus = False; // add plus sign before number
   _Bool space = False; // if no sign will be written add space before value
   _Bool zero = False;
+  _Bool hashtag = False; //in this data type if present it is an error and will print everything otherwise, but will return the error code of -1
   while ((flag != NULL) && (flag != width) && (flag != precision) && (flag != length) && (flag != stop)){
     if (*flag == '-') leftJ = True;
     else if (*flag == '+') plus = True;
     else if ((*flag == ' ') && (plus == False)) space = True; // only applies if no sign is otherwise printed 
-    else if (*flag == '0') zero = True;    
+    else if (*flag == '0') zero = True;  
+    else if (*flag == '#') hashtag = True;
     flag++; 
   }
   if (leftJ == True) zero = False; //If the '-' flag is indicated, the '0' flag is ignored
@@ -183,7 +185,9 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
       charPrintedCounter++;
     }
   } 
-  return charPrintedCounter;
+  
+  if (hashtag == True) return -1; //to indicate error even though printed number
+  else return charPrintedCounter;
 }
 
 int hexadecimal_int(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
@@ -209,6 +213,8 @@ int my_printf(char *input_string, ...){
   // Initialize the argument list
   va_start(args, input_string); // the last value in the list is 0, indicating the end of the list
 
+  _Bool error = False; //will be set to True if any flags are incorrect
+  
   //Loop through the string and write to stdout
   char current; //initializes a variable to store the current character in from the string
   while(*string != '\0'){
@@ -273,8 +279,8 @@ int my_printf(char *input_string, ...){
       else return -1; //If the specifier is not d, x, c, or s, then return -1 to indicate an error
 
       // if one of the functions returns with an error (returns -1) then exit the function and return -1 to indicate an error
-      if (charPrinted == -1) return -1;
-      else numPrintedChar += charPrinted;
+      if (charPrinted != -1) numPrintedChar += charPrinted;
+      else if (charPrinted == -1) error = True;
       
       // when the function returns, string is set to the next character to print and va_list is set so va_arg will retrieve the next argument on the stack
     }
@@ -283,6 +289,7 @@ int my_printf(char *input_string, ...){
 
   //If the function completed successfully, clean up va_list and return the number of printed characters.
   va_end(args); //clean up the va_list
+  if (error == True) return -1;
   return numPrintedChar;
 }
 
@@ -291,6 +298,11 @@ int my_printf(char *input_string, ...){
 
 
 int main() {
+  my_printf("hi %#d there", 3);
+  printf("\n");
+  printf("hi %#d there", 3);
+  printf("\n");
+  
   //testing precision -- if .* and then number throw error
   my_printf("Hello %.*5d there", 3);
   printf("\n");
