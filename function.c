@@ -199,7 +199,7 @@ int strings(va_list args, char * flag, char * width, char * precision, char * le
 
 
 
-int my_prinf(char *input_string, ...){
+int my_printf(char *input_string, ...){
   int numPrintedChar = 0; //the function will return this value which keeps track of the number of characters written
   
   char * string = input_string; //The variable "string" now points to the first character in the string
@@ -292,45 +292,45 @@ int my_prinf(char *input_string, ...){
 
 int main() {
   //testing %%
-  /*my_prinf("Hello %ld %% there", 2028465);
+  /*my_printf("Hello %ld %% there", 2028465);
   
   //testing specifiers
-  my_prinf("Hello %lld there", 645650090);
-  my_prinf("Hello %ld there", 2028465);
-  my_prinf("Hello %hd there", 2);
-  my_prinf("Hello %hhd there", -3);
+  my_printf("Hello %lld there", 645650090);
+  my_printf("Hello %ld there", 2028465);
+  my_printf("Hello %hd there", 2);
+  my_printf("Hello %hhd there", -3);
   
   // testing precision
-  my_prinf("Hello %.d there", 0);
-  my_prinf("Hello %.d there", 31);
-  my_prinf("Hello %.1d there", 31);
-  my_prinf("Hello %.3d there", 31);
+  my_printf("Hello %.d there", 0);
+  my_printf("Hello %.d there", 31);
+  my_printf("Hello %.1d there", 31);
+  my_printf("Hello %.3d there", 31);
     
   //testing width -- with right justification and zero flag
-  my_prinf("Hello %-04d there", 31);
-  my_prinf("Hello %04d there", 31);
-  my_prinf("Hello %-4d there", 31);
+  my_printf("Hello %-04d there", 31);
+  my_printf("Hello %04d there", 31);
+  my_printf("Hello %-4d there", 31);
   
   //testing width -- simple
-  my_prinf("Hello %*d there", 5, 31);
-  my_prinf("Hello %4d there", 31);
-  my_prinf("Hello %2d there", 31);
-  my_prinf("Hello %1d there", 31);
-  my_prinf("Hello %1d there", 1);
+  my_printf("Hello %*d there", 5, 31);
+  my_printf("Hello %4d there", 31);
+  my_printf("Hello %2d there", 31);
+  my_printf("Hello %1d there", 31);
+  my_printf("Hello %1d there", 1);
   
   //testing flags -- simple
-  my_prinf("Hello %0d there", -1);
-  my_prinf("Hello %#d there", -1);
-  my_prinf("Hello % d there", 1);
-  my_prinf("Hello % d there", -1);
-  my_prinf("Hello %+d there", -1);
-  my_prinf("Hello %+d there", 1);
-  my_prinf("Hello %-d there", 1);
+  my_printf("Hello %0d there", -1);
+  my_printf("Hello %#d there", -1);
+  my_printf("Hello % d there", 1);
+  my_printf("Hello % d there", -1);
+  my_printf("Hello %+d there", -1);
+  my_printf("Hello %+d there", 1);
+  my_printf("Hello %-d there", 1);
   
   //testing modifier
-  my_prinf("Hello %d there", 1); //with text after placeholder
-  my_prinf("Hello %d", 1); 
-  my_prinf("Hello");*/
+  my_printf("Hello %d there", 1); //with text after placeholder
+  my_printf("Hello %d", 1); 
+  my_printf("Hello");*/
 }
 
 
