@@ -14,12 +14,6 @@ My changes:
 #define False 0
 #define True 1
 
-//make sure throws error if any mistake with any of the specifiers
-//make sure throws error if tries to retireve from va_list and hits 0 (end of the list) i.e. there were not enough arguments specified by their function call -- BOTH IN GENERAL FUNCTION IF TOO MANY %s AND ALSO IN DECIMAL FUNCTION IF USE * TO RETRIEVE SECOND AREGUMENT
-//make sure that if the general function returns with things still on va_list to throw a warning message
-//indicate that I made the choice that if an unknown specifier is used it is ignored and no error message is thrown back
-// make sure negative numbers naturally print with a negative sign
-
 //functions to deal with each data type and their specifiers
 int decimal_int(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
   int charPrintedCounter = 0; //will be added to numPrintedChar when the function returns to the old function
