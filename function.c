@@ -12,7 +12,8 @@
 // make sure negative numbers naturally print with a negative sign
 
 //functions to deal with each data type and their specifiers
-void decimal_int(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
+int decimal_int(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
+  int charPrintedCounter = 0; //will be added to numPrintedChar when the function returns to the old function
 
   // Flags
   // While still in flag field and have not hit the start of another field, process each flag
@@ -122,23 +123,37 @@ void decimal_int(va_list args, char * flag, char * width, char * precision, char
     while (numSpaces != 0){
       putchar(' ');
       numSpaces--;
+      charPrintedCounter++;
     }
   }
   
   //print sign (neg, plus from flag, space from flag)
-  if (negative == True) putchar('-');
-  if ((plus == True) && (negative == False)) putchar('+');
-  if ((space == True) && (negative == False)) putchar(' '); //don't have to check that plus is False as space can't be True if plus is False
+  if (negative == True){
+    putchar('-');
+    charPrintedCounter++;
+  } 
+  if ((plus == True) && (negative == False)){
+    putchar('+');
+    charPrintedCounter++;
+  } 
+  if ((space == True) && (negative == False)){
+    putchar(' '); //don't have to check that plus is False as space can't be True if plus is False
+    charPrintedCounter++;
+  } 
   
   //print leading zeros
   while (paddingZeros != 0){
     putchar('0');
     paddingZeros--;
+    charPrintedCounter++;
   }
   
   //print the decimal number
   if (decimal == 0){
-    if (p != 0) putchar('0');
+    if (p != 0) {
+      putchar('0');
+      charPrintedCounter++;
+    }
   } 
   else{
       char digits[decimalLength + 1];
@@ -157,6 +172,7 @@ void decimal_int(va_list args, char * flag, char * width, char * precision, char
       while (digits[j] != '\0'){
         putchar(digits[j]);
         j++;
+        charPrintedCounter++;
       }
     }
   
@@ -165,23 +181,27 @@ void decimal_int(va_list args, char * flag, char * width, char * precision, char
     while (numSpaces != 0){
       putchar(' ');
       numSpaces--;
+      charPrintedCounter++;
     }
-  }  
+  } 
+  return charPrintedCounter;
 }
 
-void hexadecimal_int(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
+int hexadecimal_int(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
 }
 
-void character(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
+int character(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
 }
 
-void strings(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
+int strings(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
 }
 
 
 
 
-void my_prinf(char *input_string, ...){
+int my_prinf(char *input_string, ...){
+  int numPrintedChar = 0; //the function willl return this value which keeps track of the number of characters written
+  
   char * string = input_string; //The variable "string" now points to the first character in the string
   
   // declare a va_list to hold the arguments. va_list is the type used to store the variable arguments.
@@ -198,6 +218,7 @@ void my_prinf(char *input_string, ...){
     // While we are up to a regular character, print the character to the stdout
     if (current != '%'){
       putchar(current);
+      numPrintedChar++; 
       string ++; //increments the pointer
     }
 
@@ -240,10 +261,10 @@ void my_prinf(char *input_string, ...){
       string++; //increment the string pointer -- now pointing to the next character to be printed
 
       // functions to deal with the data type, argument from args, and specifications 
-      if (specifier == 'd') decimal_int(args, flag, width, precision, length, stop);
-      if (specifier == 'x') hexadecimal_int(args, flag, width, precision, length, stop);
-      if (specifier == 'c') character(args, flag, width, precision, length, stop);
-      if (specifier == 's') strings(args, flag, width, precision, length, stop);
+      if (specifier == 'd') numPrintedChar += decimal_int(args, flag, width, precision, length, stop);
+      if (specifier == 'x') numPrintedChar += hexadecimal_int(args, flag, width, precision, length, stop);
+      if (specifier == 'c') numPrintedChar +=character(args, flag, width, precision, length, stop);
+      if (specifier == 's') numPrintedChar += strings(args, flag, width, precision, length, stop);
       // when the function returns, string is set to the next character to print and va_list is set so va_arg will retrieve the next argument on the stack
     }
     
@@ -254,6 +275,8 @@ void my_prinf(char *input_string, ...){
  
   //va_arg(args, type) retrieves the next argument of that type in the list
   va_end(args); //clean up the va_list
+
+  return numPrintedChar;
   
 }
 
@@ -262,8 +285,20 @@ void my_prinf(char *input_string, ...){
 
 
 int main() {
+  //testing specifiers
+  /*my_prinf("Hello %lld there", 645650090);
+  my_prinf("Hello %ld there", 2028465);
+  my_prinf("Hello %hd there", 2);
+  my_prinf("Hello %hhd there", -3);
+  
+  // testing precision
+  my_prinf("Hello %.d there", 0);
+  my_prinf("Hello %.d there", 31);
+  my_prinf("Hello %.1d there", 31);
+  my_prinf("Hello %.3d there", 31);
+    
   //testing width -- with right justification and zero flag
-  /*my_prinf("Hello %-04d there", 31);
+  my_prinf("Hello %-04d there", 31);
   my_prinf("Hello %04d there", 31);
   my_prinf("Hello %-4d there", 31);
   
