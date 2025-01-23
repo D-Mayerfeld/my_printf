@@ -28,12 +28,11 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
   while ((flag != NULL) && (flag != width) && (flag != precision) && (flag != length) && (flag != stop)){
     if (*flag == '-') leftJ = True;
     else if (*flag == '+') plus = True;
-    else if ((*flag == ' ') && (plus == False)) space = True; // only applies if no sign is otherwise printed 
+    else if (*flag == ' ') space = True; // only applies if no sign is otherwise printed 
     else if (*flag == '0') zero = True;  
     else if (*flag == '#') hashtag = True;
     flag++; 
   }
-  if (leftJ == True) zero = False; //If the '-' flag is indicated, the '0' flag is ignored
   
   //Width (might pop an element from the argument list)
   int w = 0;
@@ -66,7 +65,7 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
   if ((precision != NULL) && (precision != length) && (precision != stop)) return -1; //if there was .* and then a number, throw an error
 
   //Length (determine length and pop the decimal value)
-  int decimal; //declare variable 
+  long long int decimal; //declare variable 
   if (length == NULL){
     decimal = va_arg(args, int);
   } 
@@ -77,10 +76,10 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
     decimal = (short int)va_arg(args, int);
   } 
   else if ((*length == 'l') && ((length+1) == stop)){
-    decimal = (long int)va_arg(args, long int);
+    decimal = va_arg(args, long int);
   } 
   else if ((*length == 'l') && (*(length+1) == 'l') && ((length+2) == stop)){
-    decimal = (long long int)va_arg(args, long long int);
+    decimal = va_arg(args, long long int);
   } 
   else return -1;
   
@@ -115,9 +114,10 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
   }
   // add spaces or padding zeros based on indicated width and if 0 flag is indicated
   if ((decimalLength + numFlags + paddingZeros) < w){
-    if (zero == True) paddingZeros += (w-(decimalLength + numFlags + paddingZeros));
+    if ((zero == True) && (leftJ == False)) paddingZeros += (w-(decimalLength + numFlags + paddingZeros));
       else numSpaces = (w-(decimalLength + numFlags + paddingZeros));
   }
+  
 
   //print spaces if right justified
   if (leftJ == True) {
@@ -137,7 +137,7 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
     putchar('+');
     charPrintedCounter++;
   } 
-  if ((space == True) && (negative == False)){
+  if ((space == True) && (negative == False) && (plus == False)){
     putchar(' '); //don't have to check that plus is False as space can't be True if plus is False
     charPrintedCounter++;
   } 
@@ -186,11 +186,177 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
     }
   } 
   
-  if (hashtag == True) return -1; //to indicate error even though printed number
+  if ((hashtag == True) || ((plus == True) && (space == True)) || ((zero == True) && (leftJ == True))) return -1; //to indicate error even though printed number
   else return charPrintedCounter;
 }
 
 int hexadecimal_int(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
+  int charPrintedCounter = 0; //will be added to numPrintedChar when the function returns to the old function
+
+  // Flags
+  // While still in flag field and have not hit the start of another field, process each flag
+  _Bool leftJ = False; // This will be set to true if justification is specified (because infomation is needed from the width field before printing)
+  _Bool plus = False; // add plus sign before number
+  _Bool space = False; // if no sign will be written add space before value
+  _Bool zero = False;
+  _Bool hashtag = False; //in this data type if present it is an error and will print everything otherwise, but will return the error code of -1
+  while ((flag != NULL) && (flag != width) && (flag != precision) && (flag != length) && (flag != stop)){
+    if (*flag == '-') leftJ = True;
+    else if (*flag == '+') plus = True;
+    else if (*flag == ' ') space = True; // only applies if no sign is otherwise printed 
+    else if (*flag == '0') zero = True;  
+    else if (*flag == '#') hashtag = True;
+    flag++; 
+  }
+  
+  //Width (might pop an element from the argument list)
+  int w = 0;
+  // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
+  if ((width != NULL) && (*width == '*')) {
+    w = va_arg(args, int);
+    //throw an error if width was indicated with a * and a number after it (which will get past the pointers in the my_printf function)
+    if ((*(width+1) >= 48) && (*(width+1) <= 57)) return -1;
+  }
+    else {
+      while ((width != NULL) && (width != precision) && (width != length) && (width != stop)){
+        w = (w*10) + (*width - '0'); 
+        width++;
+      }
+    }
+
+  //Precision -- (might pop an element from the argument list)
+  int p = -1; //NULL value
+  // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
+  if ((precision != NULL) && (*precision == '.') && (*(precision + 1) == '*')) p = va_arg(args, int);
+  else if ((precision != NULL) && (*precision == '.')){
+    precision++;
+    p = 0;
+    //while still in this field and still a number (if no number specified, remains zero)
+    while ((precision != length) && (precision != stop) && (*precision >= 48) && (*precision <= 57)){
+      p = (p*10) + (*precision - '0'); 
+      precision++;
+    }    
+  }
+  if ((precision != NULL) && (precision != length) && (precision != stop)) return -1; //if there was .* and then a number, throw an error
+
+  //Length (determine length and pop the decimal value)
+  unsigned long long int hex; //declare variable 
+  if (length == NULL){
+    hex = va_arg(args, unsigned int);
+  } 
+  else if ((*length == 'h') && (*(length+1) == 'h') && ((length+2) == stop)){
+    hex = (unsigned char)va_arg(args, unsigned int);
+  } 
+  else if ((*length == 'h') && ((length+1) == stop)){
+    hex = (unsigned short int)va_arg(args, unsigned int);
+  } 
+  else if ((*length == 'l') && ((length+1) == stop)){
+    hex = va_arg(args, unsigned long int);
+  } 
+  else if ((*length == 'l') && (*(length+1) == 'l') && ((length+2) == stop)){
+    hex = va_arg(args, unsigned long long int);
+  } 
+  else return -1;
+  
+  // intializing variables for printing
+  int hexLength = 0; //length of the decimal number to be printed 
+  int numFlags = 0; //amount of characters added by flags, and negative sign if negative
+  _Bool negative = False; //if number is negative
+  int paddingZeros = 0; //number of zeros to add
+  int numSpaces = 0; //number of spaces to add
+
+  // update hexLength and negative variables
+  if (hex == 0) hexLength = 1;
+  else if (hex <= 0){
+    hexLength = 8;
+    negative == True;
+  }
+    else {  
+      int hexCopy = hex; //make a copy so it does not alter the value stored in decimal
+      while (hexCopy != 0){
+        hexCopy >>= 4; //divide by 16 (right shift by 4 bits)
+        hexLength++;
+      }
+    }
+
+  // update numFlags 
+  if ((hex != 0) && (hashtag == True)) numFlags = 2; 
+
+  //update paddingZeros and numSpaces
+  //first check for precision and update padding zeros
+  if ((hexLength + numFlags) < p){
+    paddingZeros += (p-(hexLength + numFlags));
+  }
+  // add spaces or padding zeros based on indicated width and if 0 flag is indicated
+  if ((hexLength + numFlags + paddingZeros) < w){
+    if ((zero == True) && (p == -1)) paddingZeros += (w-(hexLength + numFlags + paddingZeros)); //because if precision is set the 0 flag is ignored and spaces are added
+      else numSpaces = (w-(hexLength + numFlags + paddingZeros));
+  }
+
+  //print spaces if right justified
+  if (leftJ == True) {
+    while (numSpaces != 0){
+      putchar(' ');
+      numSpaces--;
+      charPrintedCounter++;
+    }
+  } 
+
+  //print 0x if indicated and hex is not zero
+  if ((hashtag == True) && (hex != 0)){
+    putchar('0');
+    putchar('x');
+    charPrintedCounter = charPrintedCounter + 2;
+  }
+  
+  //print leading zeros
+  while (paddingZeros != 0){
+    putchar('0');
+    paddingZeros--;
+    charPrintedCounter++;
+  }
+
+  //print the decimal number
+  if (hex == 0){
+    if (p != 0) {
+      putchar('0');
+      charPrintedCounter++;
+    }
+  } 
+  else{
+    char hex_digits[] = "0123456789abcdef"; //array of all the hex characters
+
+    char digits[hexLength + 1];
+    digits[hexLength] = '\0'; //add null terminator to the string
+
+    //hex int to string
+    int i = hexLength - 1;
+    while (i >= 0){
+      digits[i] = hex_digits[hex % 16]; //divide by 16 and add the character for the remainder to the string
+      hex /= 16;
+      i--;  
+    }
+      
+    //print the string to the output
+    int j = 0;
+    while (digits[j] != '\0'){
+      putchar(digits[j]);
+      j++;
+      charPrintedCounter++;
+    }
+  }
+  
+  //print spaces if left justified
+  if (leftJ == False) {
+    while (numSpaces != 0){
+      putchar(' ');
+      numSpaces--;
+      charPrintedCounter++;
+    }
+  } 
+
+  if ((space == True) || (plus == True)) return -1; //if space or plus flags are True, they are ignored and the number is still printed, but it is technically an error, so return -1
+  else return charPrintedCounter;
 }
 
 int character(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
@@ -298,6 +464,15 @@ int my_printf(char *input_string, ...){
 
 
 int main() {
+  //testing hexadecimal_int
+  printf("hi %x there %x", -1, 435465454345);
+  //my_printf("hi %x there", -3233);
+  printf("\n");
+  
+  my_printf("hi %x there", 3233);
+  printf("\n");
+  
+  //
   my_printf("hi %#d there", 3);
   printf("\n");
   printf("hi %#d there", 3);
