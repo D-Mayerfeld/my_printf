@@ -52,7 +52,10 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
   //Precision -- (might pop an element from the argument list)
   int p = -1; //NULL value
   // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
-  if ((precision != NULL) && (*precision == '.') && (*(precision + 1) == '*')) p = va_arg(args, int);
+  if ((precision != NULL) && (*precision == '.') && (*(precision + 1) == '*')){
+    p = va_arg(args, int);
+    if (((precision+2) != length) && ((precision+2) != stop)) return -1; //if there was .* and then a number, throw an error
+  } 
   else if ((precision != NULL) && (*precision == '.')){
     precision++;
     p = 0;
@@ -62,8 +65,7 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
       precision++;
     }    
   }
-  if ((precision != NULL) && (precision != length) && (precision != stop)) return -1; //if there was .* and then a number, throw an error
-
+  
   //Length (determine length and pop the decimal value)
   long long int decimal; //declare variable 
   if (length == NULL){
@@ -227,7 +229,10 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
   //Precision -- (might pop an element from the argument list)
   int p = -1; //NULL value
   // if the width field has a '*' then pop the width from the args list, if not then iterate through width until you hit the next field and convert the character number into an integer number (don't need to check that points to a number because done in original function)
-  if ((precision != NULL) && (*precision == '.') && (*(precision + 1) == '*')) p = va_arg(args, int);
+  if ((precision != NULL) && (*precision == '.') && (*(precision + 1) == '*')){
+    p = va_arg(args, int);
+    if (((precision+2) != length) && ((precision+2) != stop)) return -1; //if there was .* and then a number, throw an error
+  } 
   else if ((precision != NULL) && (*precision == '.')){
     precision++;
     p = 0;
