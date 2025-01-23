@@ -120,7 +120,7 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
   
 
   //print spaces if right justified
-  if (leftJ == True) {
+  if (leftJ == False) {
     while (numSpaces != 0){
       putchar(' ');
       numSpaces--;
@@ -178,7 +178,7 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
     }
   
   //print spaces if left justified
-  if (leftJ == False) {
+  if (leftJ == True) {
     while (numSpaces != 0){
       putchar(' ');
       numSpaces--;
@@ -294,7 +294,7 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
   }
 
   //print spaces if right justified
-  if (leftJ == True) {
+  if (leftJ == False) {
     while (numSpaces != 0){
       putchar(' ');
       numSpaces--;
@@ -367,7 +367,7 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
   }
   
   //print spaces if left justified
-  if (leftJ == False) {
+  if (leftJ == True) {
     while (numSpaces != 0){
       putchar(' ');
       numSpaces--;
