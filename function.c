@@ -240,7 +240,7 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
   if ((precision != NULL) && (precision != length) && (precision != stop)) return -1; //if there was .* and then a number, throw an error
 
   //Length (determine length and pop the decimal value)
-  unsigned long long int hex; //declare variable 
+  int hex; //declare variable 
   if (length == NULL){
     hex = va_arg(args, unsigned int);
   } 
@@ -269,7 +269,7 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
   if (hex == 0) hexLength = 1;
   else if (hex <= 0){
     hexLength = 8;
-    negative == True;
+    negative = True;
   }
     else {  
       int hexCopy = hex; //make a copy so it does not alter the value stored in decimal
@@ -323,7 +323,7 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
       charPrintedCounter++;
     }
   } 
-  else{
+  else if (negative == False){
     char hex_digits[] = "0123456789abcdef"; //array of all the hex characters
 
     char digits[hexLength + 1];
@@ -342,6 +342,26 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
     while (digits[j] != '\0'){
       putchar(digits[j]);
       j++;
+      charPrintedCounter++;
+    }
+  }
+  else if (negative == True){
+    unsigned long long int binary = (unsigned long long int)hex;
+    
+    char hex_digits[] = "0123456789abcdef"; //array of all the hex characters
+
+    char digits[hexLength + 1];
+    digits[hexLength] = '\0'; //add null terminator to the string
+
+    //convert binary to hex
+    for (int i = 7; i >= 0; i--){
+      digits[i] = hex_digits[binary & 0xF]; //considers the last 4 bits
+      binary >>= 4; //shifts binary to the right by 4 bits
+    }
+
+    //print hex
+    for (int i = 0; i < 8; i++){
+      putchar(digits[i]);
       charPrintedCounter++;
     }
   }
@@ -465,7 +485,7 @@ int my_printf(char *input_string, ...){
 
 int main() {
   //testing hexadecimal_int
-  printf("hi %x there %x", -1, 435465454345);
+  printf("hi %x there", -5);
   //my_printf("hi %x there", -3233);
   printf("\n");
   
