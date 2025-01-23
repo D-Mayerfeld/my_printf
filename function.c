@@ -298,51 +298,80 @@ int my_printf(char *input_string, ...){
 
 int main() {
   //testing width -- if * and then a number
-  /*my_printf("Hello %*4d there", 3, 2);
+  my_printf("Hello %*4d there", 3, 2);
+  printf("\n");
   
   //testing '-' flag with '0' flag (ignore '0' flag in this case)
   my_printf("Hello %-04d there", 3);
+  printf("\n");
   
   //testing %%
   my_printf("Hello %ld %% there", 2028465);
+  printf("\n");
   
   //testing specifiers
   my_printf("Hello %lld there", 645650090);
+  printf("\n");
   my_printf("Hello %ld there", 2028465);
+  printf("\n");
   my_printf("Hello %hd there", 2);
+  printf("\n");
   my_printf("Hello %hhd there", -3);
+  printf("\n");
   
   // testing precision
   my_printf("Hello %.d there", 0);
+  printf("\n");
   my_printf("Hello %.d there", 31);
+  printf("\n");
   my_printf("Hello %.1d there", 31);
+  printf("\n");
   my_printf("Hello %.3d there", 31);
+  printf("\n");
     
   //testing width -- with right justification and zero flag
   my_printf("Hello %-04d there", 31);
+  printf("\n");
   my_printf("Hello %04d there", 31);
+  printf("\n");
   my_printf("Hello %-4d there", 31);
+  printf("\n");
   
   //testing width -- simple
   my_printf("Hello %*d there", 5, 31);
+  printf("\n");
   my_printf("Hello %4d there", 31);
+  printf("\n");
   my_printf("Hello %2d there", 31);
+  printf("\n");
   my_printf("Hello %1d there", 31);
+  printf("\n");
   my_printf("Hello %1d there", 1);
+  printf("\n");
   
   //testing flags -- simple
   my_printf("Hello %0d there", -1);
+  printf("\n");
   my_printf("Hello %#d there", -1);
+  printf("\n");
   my_printf("Hello % d there", 1);
+  printf("\n");
   my_printf("Hello % d there", -1);
+  printf("\n");
   my_printf("Hello %+d there", -1);
+  printf("\n");
   my_printf("Hello %+d there", 1);
+  printf("\n");
   my_printf("Hello %-d there", 1);
+  printf("\n");
   
   //testing modifier
   my_printf("Hello %d there", 1); //with text after placeholder
+  printf("\n");
   my_printf("Hello %d", 1); 
-  my_printf("Hello");*/
+  printf("\n");
+  my_printf("Hello");
+  printf("\n");
 }
 
 
