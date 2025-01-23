@@ -1,3 +1,10 @@
+/*
+The function returns the number of characters printed. If error encountered, returns -1
+
+My changes: 
+1. If an error occurs, it still prints everything up to the error
+*/
+
 #include <stdio.h>
 #include <stdarg.h>
 
