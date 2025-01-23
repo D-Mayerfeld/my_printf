@@ -297,11 +297,14 @@ int my_printf(char *input_string, ...){
 
 
 int main() {
+  //testing width -- if * and then a number
+  /*my_printf("Hello %*4d there", 3, 2);
+  
   //testing '-' flag with '0' flag (ignore '0' flag in this case)
   my_printf("Hello %-04d there", 3);
   
   //testing %%
-  /*my_printf("Hello %ld %% there", 2028465);
+  my_printf("Hello %ld %% there", 2028465);
   
   //testing specifiers
   my_printf("Hello %lld there", 645650090);
