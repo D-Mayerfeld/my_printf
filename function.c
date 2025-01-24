@@ -1,12 +1,11 @@
 /*
 The function returns the number of characters printed. If error encountered, returns -1
 Note that if you input too few parameters, the function will run, but will produce unexpected behavior. 
-//NOT ALLOWING J,Z,T OPTIONS -- MAKE NOTE OF THAT
-// if in the length field indicate the wrong type, or wrong type anywhere in function will not return error and will get unexpected behavior
-
-My changes: 
-1. If an error occurs, it still prints everything up to where the error was encountered and stops printing immediately
+j, z, t length types are not allowed
+If the type of a parameter is indicated incorrectly, the function will produce unexpected behavior.
+Note: s type not completed
 */
+
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -458,8 +457,10 @@ int character(va_list args, char * flag, char * width, char * precision, char * 
   else return charPrintedCounter;
 }
 
+/*
 int strings(va_list args, char * flag, char * width, char * precision, char * length, char *stop){
 }
+*/
 
 
 
@@ -537,7 +538,7 @@ int my_printf(char *input_string, ...){
       if (specifier == 'd') charPrinted = decimal_int(args, flag, width, precision, length, stop);
       else if (specifier == 'x') charPrinted = hexadecimal_int(args, flag, width, precision, length, stop);
       else if (specifier == 'c') charPrinted = character(args, flag, width, precision, length, stop);
-      else if (specifier == 's') charPrinted = strings(args, flag, width, precision, length, stop);
+      //else if (specifier == 's') charPrinted = strings(args, flag, width, precision, length, stop);
       else return -1; //If the specifier is not d, x, c, or s, then return -1 to indicate an error
 
       // if one of the functions returns with an error (returns -1) then exit the function and return -1 to indicate an error
@@ -557,16 +558,7 @@ int my_printf(char *input_string, ...){
 
 
 
-
-
 int main() {
-  
-  
-
-  //char ignores the 0,+,space,# flags and only recognizes - flag. It also does not recognize precision or length modifiers
-  //hex ignores the + flag and space, but recognizes -,#,0. If 0,- are both indicated, 0 is ignored
-  //Furthermore, 0 flag is ignored if precision is set
-
   //MY_PRINTF PARENT FUNCTION TESTING
   //Regular string
   printf("REGULAR STRING  \n");
@@ -1000,9 +992,9 @@ int main() {
   //flag test (+) 
   printf("+ FLAG  \n");
   printf("my_printf:");
-  my_printf("Test number %+.4d now" , -5);
+  my_printf("Test number %+.4x now" , -5);
   printf("\n   printf:");
-  printf("Test number %+.4d now" , -5);
+  printf("Test number %+.4x now" , -5);
   printf("\n");
   printf("\n");
   
@@ -1063,5 +1055,103 @@ int main() {
   printf("Test number %hhx now" , 12345);
   printf("\n");
   printf("\n");
+
+  //CHARACTER TESTS
+  //simple tests
+  printf("SIMPLE CHAR  \n");
+  printf("my_printf:");
+  my_printf("Test number %c" , 'c');
+  printf("\n   printf:");
+  printf("Test number %c" , 'c');
+  printf("\n");
+  printf("\n");
+  
+  printf("SIMPLE INT  \n");
+  printf("my_printf:");
+  my_printf("Test number %c" , 45);
+  printf("\n   printf:");
+  printf("Test number %c" , 45);
+  printf("\n");
+  printf("\n");
+  
+  //width tests
+  printf("WIDTH SIMPLE \n");
+  printf("my_printf:");
+  my_printf("Test number %4c now" , 5);
+  printf("\n   printf:");
+  printf("Test number %4c now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("WIDTH WITH * \n");
+  printf("my_printf:");
+  my_printf("Test number %*c now" , 6, 'd');
+  printf("\n   printf:");
+  printf("Test number %*c now" , 6, 'd');
+  printf("\n");
+  printf("\n");
+  
+  //flag test (#)
+  printf("# FLAG \n");
+  printf("my_printf:");
+  my_printf("Test number %#c now" , 'l');
+  printf("\n   printf:");
+  printf("Test number %#c now" , 'l');
+  printf("\n");
+  printf("\n");
+  
+  //flag test (0)
+  printf("0 FLAG WITH WIDTH AND - FLAG \n");
+  printf("my_printf:");
+  my_printf("Test number %-04c now" , 5);
+  printf("\n   printf:");
+  printf("Test number %-04c now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  //flag test (space)
+  printf("SPACE FLAG \n");
+  printf("my_printf:");
+  my_printf("Test number % c now" , 5);
+  printf("\n   printf:");
+  printf("Test number % c now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  //flag test (+) 
+  printf("+ FLAG  \n");
+  printf("my_printf:");
+  my_printf("Test number %+c now" , 'p');
+  printf("\n   printf:");
+  printf("Test number %+c now" , 'p');
+  printf("\n");
+  printf("\n");
+  
+  //flag tests (-)
+  printf("- FLAG WITH WIDTH  \n");
+  printf("my_printf:");
+  my_printf("Test number %-5c now" , 16);
+  printf("\n   printf:");
+  printf("Test number %-5c now" , 16);
+  printf("\n");
+  printf("\n");
+  
+  printf("- FLAG NO WIDTH  \n");
+  printf("my_printf:");
+  my_printf("Test number %-c now" , 15);
+  printf("\n   printf:");
+  printf("Test number %-c now" , 15);
+  printf("\n");
+  printf("\n");
+
+  //MIXED TESTS
+  printf("MIXED TYPES  \n");
+  printf("my_printf:");
+  my_printf("This %-4d test is %*c crazy one %#4lx" , -4, 3, 'a', 333242);
+  printf("\n   printf:");
+  printf("This %-4d test is %*c crazy one %#4lx" , -4, 3, 'a', 333242);
+  printf("\n");
+  printf("\n");
+  
   
 }
