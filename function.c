@@ -293,7 +293,7 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
   }
   // add spaces or padding zeros based on indicated width and if 0 flag is indicated
   if ((hexLength + numFlags + paddingZeros) < w){
-    if ((zero == True) && (p == -1)) paddingZeros += (w-(hexLength + numFlags + paddingZeros)); //because if precision is set the 0 flag is ignored and spaces are added
+    if ((zero == True) && (leftJ == False) && (p == -1)) paddingZeros += (w-(hexLength + numFlags + paddingZeros)); //because if precision is set the 0 flag is ignored and spaces are added
       else numSpaces = (w-(hexLength + numFlags + paddingZeros));
   }
 
@@ -771,22 +771,6 @@ int main() {
   printf("\n");
   
   //flag test (+) 
-  printf("+ FLAG WITH PRECISION  \n");
-  printf("my_printf:");
-  my_printf("Test number %+.4d now" , -5);
-  printf("\n   printf:");
-  printf("Test number %+.4d now" , -5);
-  printf("\n");
-  printf("\n");
-  
-  printf("+ FLAG WITH WIDTH  \n");
-  printf("my_printf:");
-  my_printf("Test number %+4d now" , -5);
-  printf("\n   printf:");
-  printf("Test number %+4d now" , -5);
-  printf("\n");
-  printf("\n");
-  
   printf("+ FLAG WITH NEGATIVE NUMBER  \n");
   printf("my_printf:");
   my_printf("Test number %+d now" , -5);
@@ -803,6 +787,22 @@ int main() {
   printf("\n");
   printf("\n");
   
+  printf("+ FLAG WITH PRECISION  \n");
+  printf("my_printf:");
+  my_printf("Test number %+.4d now" , -5);
+  printf("\n   printf:");
+  printf("Test number %+.4d now" , -5);
+  printf("\n");
+  printf("\n");
+  
+  printf("+ FLAG WITH WIDTH  \n");
+  printf("my_printf:");
+  my_printf("Test number %+4d now" , -5);
+  printf("\n   printf:");
+  printf("Test number %+4d now" , -5);
+  printf("\n");
+  printf("\n");
+    
   //flag tests (-)
   printf("- FLAG WITH WIDTH AND PRECISION  \n");
   printf("my_printf:");
@@ -863,5 +863,205 @@ int main() {
 
 
   //HEXADECIMAL_INT TESTS
+  //simple tests
+  printf("SIMPLE  \n");
+  printf("my_printf:");
+  my_printf("Test number %x" , 132432);
+  printf("\n   printf:");
+  printf("Test number %x" , 132432);
+  printf("\n");
+  printf("\n");
+  
+  //width tests
+  printf("WIDTH SIMPLE \n");
+  printf("my_printf:");
+  my_printf("Test number %4x now" , 5);
+  printf("\n   printf:");
+  printf("Test number %4x now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("WIDTH WITH * \n");
+  printf("my_printf:");
+  my_printf("Test number %*x now" , 6, 5234);
+  printf("\n   printf:");
+  printf("Test number %*x now" , 6, 5234);
+  printf("\n");
+  printf("\n");
+  
+  //precision tests
+  printf("PRECISION SIMPLE \n");
+  printf("my_printf:");
+  my_printf("Test number %.4x now" , 50);
+  printf("\n   printf:");
+  printf("Test number %.4x now" , 50);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION WITH CORRESPONDING LENGTH HEX \n");
+  printf("my_printf:");
+  my_printf("Test number %.1x now" , 1);
+  printf("\n   printf:");
+  printf("Test number %.1x now" , 1);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION WITH * \n");
+  printf("my_printf:");
+  my_printf("Test number %.*x now" , 2, 5);
+  printf("\n   printf:");
+  printf("Test number %.*x now" , 2, 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION OF 0 WITH NON-ZERO HEX \n");
+  printf("my_printf:");
+  my_printf("Test number %.0x now" , 5);
+  printf("\n   printf:");
+  printf("Test number %.0x now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION OF 0 WITH ZERO HEX \n");
+  printf("my_printf:");
+  my_printf("Test number %.0x now" , 0);
+  printf("\n   printf:");
+  printf("Test number %.0x now" , 0);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION . WITHOUT number \n");
+  printf("my_printf:");
+  my_printf("Test number %.x now" , 0);
+  printf("\n   printf:");
+  printf("Test number %.x now" , 0);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION WITH WIDTH (P>W) \n");
+  printf("my_printf:");
+  my_printf("Test number %3.4x now" , 5);
+  printf("\n   printf:");
+  printf("Test number %3.4x now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION WITH WIDTH (W>P) \n");
+  printf("my_printf:");
+  my_printf("Test number %6.4x now" , 526);
+  printf("\n   printf:");
+  printf("Test number %6.4x now" , 526);
+  printf("\n");
+  printf("\n");
+  
+  //flag test (#)
+  printf("# FLAG \n");
+  printf("my_printf:");
+  my_printf("Test number %#x now" , 54354354);
+  printf("\n   printf:");
+  printf("Test number %#x now" , 54354354);
+  printf("\n");
+  printf("\n");
+  
+  //flag test (0)
+  printf("0 FLAG WITH WIDTH AND - FLAG \n");
+  printf("my_printf:");
+  my_printf("Test number %-04x now" , 5);
+  printf("\n   printf:");
+  printf("Test number %-04x now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("0 FLAG WITH WIDTH \n");
+  printf("my_printf:");
+  my_printf("Test number %04x now" , 5);
+  printf("\n   printf:");
+  printf("Test number %04x now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("0 FLAG WITH NO WIDTH \n");
+  printf("my_printf:");
+  my_printf("Test number %0x now" , 5);
+  printf("\n   printf:");
+  printf("Test number %0x now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  //flag test (space)
+  printf("SPACE FLAG \n");
+  printf("my_printf:");
+  my_printf("Test number % x now" , 5);
+  printf("\n   printf:");
+  printf("Test number % x now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  //flag test (+) 
+  printf("+ FLAG  \n");
+  printf("my_printf:");
+  my_printf("Test number %+.4d now" , -5);
+  printf("\n   printf:");
+  printf("Test number %+.4d now" , -5);
+  printf("\n");
+  printf("\n");
+  
+  //flag tests (-)
+  printf("- FLAG WITH WIDTH AND PRECISION  \n");
+  printf("my_printf:");
+  my_printf("Test number %-5.3x now" , 42);
+  printf("\n   printf:");
+  printf("Test number %-5.3x now" , 42);
+  printf("\n");
+  printf("\n");
+  
+  printf("- FLAG WITH WIDTH  \n");
+  printf("my_printf:");
+  my_printf("Test number %-5x now" , 1);
+  printf("\n   printf:");
+  printf("Test number %-5x now" , 1);
+  printf("\n");
+  printf("\n");
+  
+  printf("- FLAG NO WIDTH  \n");
+  printf("my_printf:");
+  my_printf("Test number %-x now" , 1);
+  printf("\n   printf:");
+  printf("Test number %-x now" , 1);
+  printf("\n");
+  printf("\n");
+  
+  //specifier tests
+  printf("l SPECIFIER \n");
+  printf("my_printf:");
+  my_printf("Test number %lx now" , 423432);
+  printf("\n   printf:");
+  printf("Test number %lx now" , 423432);
+  printf("\n");
+  printf("\n");
+  
+  printf("ll SPECIFIER \n");
+  printf("my_printf:");
+  my_printf("Test number %llx now" , 32423432);
+  printf("\n   printf:");
+  printf("Test number %llx now" , 32423432);
+  printf("\n");
+  printf("\n");
+  
+  printf("h SPECIFIER \n");
+  printf("my_printf:");
+  my_printf("Test number %hx now" , 12345);
+  printf("\n   printf:");
+  printf("Test number %hx now" , 12345);
+  printf("\n");
+  printf("\n");
+  
+  printf("hh SPECIFIER \n");
+  printf("my_printf:");
+  my_printf("Test number %hhx now" , 12345);
+  printf("\n   printf:");
+  printf("Test number %hhx now" , 12345);
+  printf("\n");
+  printf("\n");
   
 }
