@@ -111,8 +111,8 @@ int decimal_int(va_list args, char * flag, char * width, char * precision, char 
 
   //update paddingZeros and numSpaces
   //first check for precision and update padding zeros
-  if ((decimalLength + numFlags) < p){
-    paddingZeros += (p-(decimalLength + numFlags));
+  if (decimalLength < p){
+    paddingZeros += (p-decimalLength);
   }
   // add spaces or padding zeros based on indicated width and if 0 flag is indicated
   if ((decimalLength + numFlags + paddingZeros) < w){
@@ -288,8 +288,8 @@ int hexadecimal_int(va_list args, char * flag, char * width, char * precision, c
 
   //update paddingZeros and numSpaces
   //first check for precision and update padding zeros
-  if ((hexLength + numFlags) < p){
-    paddingZeros += (p-(hexLength + numFlags));
+  if (hexLength < p){
+    paddingZeros += (p-hexLength);
   }
   // add spaces or padding zeros based on indicated width and if 0 flag is indicated
   if ((hexLength + numFlags + paddingZeros) < w){
@@ -561,7 +561,7 @@ int my_printf(char *input_string, ...){
 
 int main() {
   
-  printf("%c \n", '5');
+  
 
   //char ignores the 0,+,space,# flags and only recognizes - flag. It also does not recognize precision or length modifiers
   //hex ignores the + flag and space, but recognizes -,#,0. If 0,- are both indicated, 0 is ignored
@@ -569,100 +569,165 @@ int main() {
 
 
   
-  /*//testing hexadecimal_int
-  my_printf("hi %llx there", 508325423427);
-  printf("\nhi %llx there", 508325423427);
-  //testing hexadecimal_int
-  printf("hi %x there", -5);
-  //my_printf("hi %x there", -3233);
+  //DECIMAL_INT TESTS
+  //flag test (#)
+  printf("# FLAG \n");
+  printf("my_printf:");
+  my_printf("Test number %#d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %#d now" , 5);
+  printf("\n");
   printf("\n");
   
-  my_printf("hi %x there", 3233);
+  //flag test (0)
+  printf("0 FLAG WITH WIDTH AND - FLAG \n");
+  printf("my_printf:");
+  my_printf("Test number %-04d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %-04d now" , 5);
+  printf("\n");
   printf("\n");
   
-  //
-  my_printf("hi %#d there", 3);
+  printf("0 FLAG WITH WIDTH \n");
+  printf("my_printf:");
+  my_printf("Test number %04d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %04d now" , 5);
   printf("\n");
-  printf("hi %#d there", 3);
-  printf("\n");
-  
-  //testing precision -- if .* and then number throw error
-  my_printf("Hello %.*5d there", 3);
   printf("\n");
   
-  //testing width -- if * and then a number
-  my_printf("Hello %*4d there", 3, 2);
+  printf("0 FLAG WITH NO WIDTH \n");
+  printf("my_printf:");
+  my_printf("Test number %0d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %0d now" , 5);
+  printf("\n");
   printf("\n");
   
-  //testing '-' flag with '0' flag (ignore '0' flag in this case)
-  my_printf("Hello %-04d there", 3);
+  //flag test (space)
+  printf("SPACE FLAG WITH NEGATIVE NUMBER \n");
+  printf("my_printf:");
+  my_printf("Test number % d now" , -5);
+  printf("\n   printf:");
+  printf("Test number % d now" , -5);
+  printf("\n");
   printf("\n");
   
-  //testing %%
-  my_printf("Hello %ld %% there", 2028465);
+  printf("SPACE FLAG WITH POSITIVE NUMBER AND + FLAG \n");
+  printf("my_printf:");
+  my_printf("Test number %+ d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %+ d now" , 5);
+  printf("\n");
   printf("\n");
   
-  //testing specifiers
-  my_printf("Hello %lld there", 645650090);
+  printf("SPACE FLAG WITH POSITIVE NUMBER  \n");
+  printf("my_printf:");
+  my_printf("Test number % d now" , 5);
+  printf("\n   printf:");
+  printf("Test number % d now" , 5);
   printf("\n");
-  my_printf("Hello %ld there", 2028465);
-  printf("\n");
-  my_printf("Hello %hd there", 2);
-  printf("\n");
-  my_printf("Hello %hhd there", -3);
   printf("\n");
   
-  // testing precision
-  my_printf("Hello %.d there", 0);
+  //flag test (+) 
+  printf("+ FLAG WITH PRECISION  \n");
+  printf("my_printf:");
+  my_printf("Test number %+.4d now" , -5);
+  printf("\n   printf:");
+  printf("Test number %+.4d now" , -5);
   printf("\n");
-  my_printf("Hello %.d there", 31);
-  printf("\n");
-  my_printf("Hello %.1d there", 31);
-  printf("\n");
-  my_printf("Hello %.3d there", 31);
-  printf("\n");
-    
-  //testing width -- with right justification and zero flag
-  my_printf("Hello %-04d there", 31);
-  printf("\n");
-  my_printf("Hello %04d there", 31);
-  printf("\n");
-  my_printf("Hello %-4d there", 31);
   printf("\n");
   
-  //testing width -- simple
-  my_printf("Hello %*d there", 5, 31);
+  printf("+ FLAG WITH WIDTH  \n");
+  printf("my_printf:");
+  my_printf("Test number %+4d now" , -5);
+  printf("\n   printf:");
+  printf("Test number %+4d now" , -5);
   printf("\n");
-  my_printf("Hello %4d there", 31);
-  printf("\n");
-  my_printf("Hello %2d there", 31);
-  printf("\n");
-  my_printf("Hello %1d there", 31);
-  printf("\n");
-  my_printf("Hello %1d there", 1);
   printf("\n");
   
-  //testing flags -- simple
-  my_printf("Hello %0d there", -1);
+  printf("+ FLAG WITH NEGATIVE NUMBER  \n");
+  printf("my_printf:");
+  my_printf("Test number %+d now" , -5);
+  printf("\n   printf:");
+  printf("Test number %+d now" , -5);
   printf("\n");
-  my_printf("Hello %#d there", -1);
   printf("\n");
-  my_printf("Hello % d there", 1);
+
+  printf("+ FLAG WITH POSITIVE NUMBER  \n");
+  printf("my_printf:");
+  my_printf("Test number %+d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %+d now" , 5);
   printf("\n");
-  my_printf("Hello % d there", -1);
-  printf("\n");
-  my_printf("Hello %+d there", -1);
-  printf("\n");
-  my_printf("Hello %+d there", 1);
-  printf("\n");
-  my_printf("Hello %-d there", 1);
   printf("\n");
   
-  //testing modifier
-  my_printf("Hello %d there", 1); //with text after placeholder
+  
+  //flag tests (-)
+  printf("- FLAG WITH WIDTH AND PRECISION  \n");
+  printf("my_printf:");
+  my_printf("Test number %-5.3d now" , 1);
+  printf("\n   printf:");
+  printf("Test number %-5.3d now" , 1);
   printf("\n");
-  my_printf("Hello %d", 1); 
   printf("\n");
-  my_printf("Hello");
-  printf("\n");*/
+  
+  printf("- FLAG WITH WIDTH  \n");
+  printf("my_printf:");
+  my_printf("Test number %-5d now" , 1);
+  printf("\n   printf:");
+  printf("Test number %-5d now" , 1);
+  printf("\n");
+  printf("\n");
+  
+  printf("- FLAG NO WIDTH  \n");
+  printf("my_printf:");
+  my_printf("Test number %-d now" , 1);
+  printf("\n   printf:");
+  printf("Test number %-d now" , 1);
+  printf("\n");
+  printf("\n");
+  
+  //simple tests
+  printf("NEGATIVE NUMBER  \n");
+  printf("my_printf:");
+  my_printf("Test number %d" , -1);
+  printf("\n   printf:");
+  printf("Test number %d" , -1);
+  printf("\n");
+  printf("\n");
+  
+  printf("WITH TEXT AFTER DECIMAL  \n");
+  printf("my_printf:");
+  my_printf("Test number %d now" , 1);
+  printf("\n   printf:");
+  printf("Test number %d now" , 1);
+  printf("\n");
+  printf("\n");
+  
+  printf("SIMPLE  \n");
+  printf("my_printf:");
+  my_printf("Test number %d" , 1);
+  printf("\n   printf:");
+  printf("Test number %d" , 1);
+  printf("\n");
+  printf("\n");
+  
+  
+  //Regular string
+  printf("REGULAR STRING  \n");
+  printf("my_printf:");
+  my_printf("Hello There!");
+  printf("\n   printf:");
+  printf("Hello There!");
+  printf("\n");
+  printf("\n");
+  
+  // No argument
+  printf("NO ARGUMENT \n");
+  printf("my_printf:");
+  my_printf("");
+  printf("\n   printf:");
+  printf("");
+  printf("\n");
 }
