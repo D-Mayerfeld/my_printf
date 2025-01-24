@@ -585,6 +585,15 @@ int main() {
   printf("");
   printf("\n");
 
+  //%%
+  printf("%% TEST \n");
+  printf("my_printf:");
+  my_printf("Test number %% now");
+  printf("\n   printf:");
+  printf("Test number %% now");
+  printf("\n");
+  printf("\n");
+
   
   //DECIMAL_INT TESTS
   //simple tests
@@ -611,7 +620,97 @@ int main() {
   printf("Test number %d" , 1);
   printf("\n");
   printf("\n");
+
+  //width tests
+  printf("WIDTH SIMPLE \n");
+  printf("my_printf:");
+  my_printf("Test number %4d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %4d now" , 5);
+  printf("\n");
+  printf("\n");
   
+  printf("WIDTH SMALLER THAN INT \n");
+  printf("my_printf:");
+  my_printf("Test number %1d now" , 5234);
+  printf("\n   printf:");
+  printf("Test number %1d now" , 5234);
+  printf("\n");
+  printf("\n");
+  
+  printf("WIDTH WITH * \n");
+  printf("my_printf:");
+  my_printf("Test number %*d now" , 6, 5234);
+  printf("\n   printf:");
+  printf("Test number %*d now" , 6, 5234);
+  printf("\n");
+  printf("\n");
+
+  //precision tests
+  printf("PRECISION SIMPLE \n");
+  printf("my_printf:");
+  my_printf("Test number %.4d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %.4d now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION WITH CORRESPONDING LENGTH INT \n");
+  printf("my_printf:");
+  my_printf("Test number %.1d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %.1d now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION WITH * \n");
+  printf("my_printf:");
+  my_printf("Test number %.*d now" , 2, 5);
+  printf("\n   printf:");
+  printf("Test number %.*d now" , 2, 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION OF 0 WITH NON-ZERO INT \n");
+  printf("my_printf:");
+  my_printf("Test number %.0d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %.0d now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION OF 0 WITH ZERO INT \n");
+  printf("my_printf:");
+  my_printf("Test number %.0d now" , 0);
+  printf("\n   printf:");
+  printf("Test number %.0d now" , 0);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION . WITHOUT number \n");
+  printf("my_printf:");
+  my_printf("Test number %.d now" , 0);
+  printf("\n   printf:");
+  printf("Test number %.d now" , 0);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION WITH WIDTH (P>W) \n");
+  printf("my_printf:");
+  my_printf("Test number %3.4d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %3.4d now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION WITH WIDTH (W>P) \n");
+  printf("my_printf:");
+  my_printf("Test number %6.4d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %6.4d now" , 5);
+  printf("\n");
+  printf("\n");
+
   //flag test (#)
   printf("# FLAG \n");
   printf("my_printf:");
@@ -703,71 +802,6 @@ int main() {
   printf("Test number %+d now" , 5);
   printf("\n");
   printf("\n");
-
-  //precision tests
-  printf("PRECISION SIMPLE \n");
-  printf("my_printf:");
-  my_printf("Test number %.4d now" , 5);
-  printf("\n   printf:");
-  printf("Test number %.4d now" , 5);
-  printf("\n");
-  printf("\n");
-  
-  printf("PRECISION WITH CORRESPONDING LENGTH INT \n");
-  printf("my_printf:");
-  my_printf("Test number %.1d now" , 5);
-  printf("\n   printf:");
-  printf("Test number %.1d now" , 5);
-  printf("\n");
-  printf("\n");
-  
-  printf("PRECISION WITH * \n");
-  printf("my_printf:");
-  my_printf("Test number %.*d now" , 2, 5);
-  printf("\n   printf:");
-  printf("Test number %.*d now" , 2, 5);
-  printf("\n");
-  printf("\n");
-  
-  printf("PRECISION OF 0 WITH NON-ZERO INT \n");
-  printf("my_printf:");
-  my_printf("Test number %.0d now" , 5);
-  printf("\n   printf:");
-  printf("Test number %.0d now" , 5);
-  printf("\n");
-  printf("\n");
-  
-  printf("PRECISION OF 0 WITH ZERO INT \n");
-  printf("my_printf:");
-  my_printf("Test number %.0d now" , 0);
-  printf("\n   printf:");
-  printf("Test number %.0d now" , 0);
-  printf("\n");
-  printf("\n");
-  
-  printf("PRECISION . WITHOUT number \n");
-  printf("my_printf:");
-  my_printf("Test number %.d now" , 0);
-  printf("\n   printf:");
-  printf("Test number %.d now" , 0);
-  printf("\n");
-  printf("\n");
-  
-  printf("PRECISION WITH WIDTH (P>W) \n");
-  printf("my_printf:");
-  my_printf("Test number %3.4d now" , 5);
-  printf("\n   printf:");
-  printf("Test number %3.4d now" , 5);
-  printf("\n");
-  printf("\n");
-  
-  printf("PRECISION WITH WIDTH (W>P) \n");
-  printf("my_printf:");
-  my_printf("Test number %6.4d now" , 5);
-  printf("\n   printf:");
-  printf("Test number %6.4d now" , 5);
-  printf("\n");
-  printf("\n");
   
   //flag tests (-)
   printf("- FLAG WITH WIDTH AND PRECISION  \n");
@@ -794,29 +828,40 @@ int main() {
   printf("\n");
   printf("\n");
 
-  //width tests
-  printf("WIDTH SIMPLE \n");
+  //specifier tests
+  printf("l SPECIFIER \n");
   printf("my_printf:");
-  my_printf("Test number %4d now" , 5);
+  my_printf("Test number %ld now" , 423432);
   printf("\n   printf:");
-  printf("Test number %4d now" , 5);
+  printf("Test number %ld now" , 423432);
   printf("\n");
   printf("\n");
   
-  printf("WIDTH SMALLER THAN INT \n");
+  printf("ll SPECIFIER \n");
   printf("my_printf:");
-  my_printf("Test number %1d now" , 5234);
+  my_printf("Test number %lld now" , 32423432);
   printf("\n   printf:");
-  printf("Test number %1d now" , 5234);
+  printf("Test number %lld now" , 32423432);
   printf("\n");
   printf("\n");
   
-  printf("WIDTH WITH * \n");
+  printf("h SPECIFIER \n");
   printf("my_printf:");
-  my_printf("Test number %*d now" , 6, 5234);
+  my_printf("Test number %hd now" , 12345);
   printf("\n   printf:");
-  printf("Test number %*d now" , 6, 5234);
+  printf("Test number %hd now" , 12345);
   printf("\n");
   printf("\n");
+  
+  printf("hh SPECIFIER \n");
+  printf("my_printf:");
+  my_printf("Test number %hhd now" , 12345);
+  printf("\n   printf:");
+  printf("Test number %hhd now" , 12345);
+  printf("\n");
+  printf("\n");
+
+
+  //HEXADECIMAL_INT TESTS
   
 }
