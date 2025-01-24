@@ -567,9 +567,51 @@ int main() {
   //hex ignores the + flag and space, but recognizes -,#,0. If 0,- are both indicated, 0 is ignored
   //Furthermore, 0 flag is ignored if precision is set
 
+  //MY_PRINTF PARENT FUNCTION TESTING
+  //Regular string
+  printf("REGULAR STRING  \n");
+  printf("my_printf:");
+  my_printf("Hello There!");
+  printf("\n   printf:");
+  printf("Hello There!");
+  printf("\n");
+  printf("\n");
+  
+  // No argument
+  printf("NO ARGUMENT \n");
+  printf("my_printf:");
+  my_printf("");
+  printf("\n   printf:");
+  printf("");
+  printf("\n");
 
   
   //DECIMAL_INT TESTS
+  //simple tests
+  printf("NEGATIVE NUMBER  \n");
+  printf("my_printf:");
+  my_printf("Test number %d" , -1);
+  printf("\n   printf:");
+  printf("Test number %d" , -1);
+  printf("\n");
+  printf("\n");
+  
+  printf("WITH TEXT AFTER DECIMAL  \n");
+  printf("my_printf:");
+  my_printf("Test number %d now" , 1);
+  printf("\n   printf:");
+  printf("Test number %d now" , 1);
+  printf("\n");
+  printf("\n");
+  
+  printf("SIMPLE  \n");
+  printf("my_printf:");
+  my_printf("Test number %d" , 1);
+  printf("\n   printf:");
+  printf("Test number %d" , 1);
+  printf("\n");
+  printf("\n");
+  
   //flag test (#)
   printf("# FLAG \n");
   printf("my_printf:");
@@ -661,7 +703,71 @@ int main() {
   printf("Test number %+d now" , 5);
   printf("\n");
   printf("\n");
+
+  //precision tests
+  printf("PRECISION SIMPLE \n");
+  printf("my_printf:");
+  my_printf("Test number %.4d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %.4d now" , 5);
+  printf("\n");
+  printf("\n");
   
+  printf("PRECISION WITH CORRESPONDING LENGTH INT \n");
+  printf("my_printf:");
+  my_printf("Test number %.1d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %.1d now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION WITH * \n");
+  printf("my_printf:");
+  my_printf("Test number %.*d now" , 2, 5);
+  printf("\n   printf:");
+  printf("Test number %.*d now" , 2, 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION OF 0 WITH NON-ZERO INT \n");
+  printf("my_printf:");
+  my_printf("Test number %.0d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %.0d now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION OF 0 WITH ZERO INT \n");
+  printf("my_printf:");
+  my_printf("Test number %.0d now" , 0);
+  printf("\n   printf:");
+  printf("Test number %.0d now" , 0);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION . WITHOUT number \n");
+  printf("my_printf:");
+  my_printf("Test number %.d now" , 0);
+  printf("\n   printf:");
+  printf("Test number %.d now" , 0);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION WITH WIDTH (P>W) \n");
+  printf("my_printf:");
+  my_printf("Test number %3.4d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %3.4d now" , 5);
+  printf("\n");
+  printf("\n");
+  
+  printf("PRECISION WITH WIDTH (W>P) \n");
+  printf("my_printf:");
+  my_printf("Test number %6.4d now" , 5);
+  printf("\n   printf:");
+  printf("Test number %6.4d now" , 5);
+  printf("\n");
+  printf("\n");
   
   //flag tests (-)
   printf("- FLAG WITH WIDTH AND PRECISION  \n");
@@ -687,47 +793,30 @@ int main() {
   printf("Test number %-d now" , 1);
   printf("\n");
   printf("\n");
-  
-  //simple tests
-  printf("NEGATIVE NUMBER  \n");
+
+  //width tests
+  printf("WIDTH SIMPLE \n");
   printf("my_printf:");
-  my_printf("Test number %d" , -1);
+  my_printf("Test number %4d now" , 5);
   printf("\n   printf:");
-  printf("Test number %d" , -1);
+  printf("Test number %4d now" , 5);
   printf("\n");
   printf("\n");
   
-  printf("WITH TEXT AFTER DECIMAL  \n");
+  printf("WIDTH SMALLER THAN INT \n");
   printf("my_printf:");
-  my_printf("Test number %d now" , 1);
+  my_printf("Test number %1d now" , 5234);
   printf("\n   printf:");
-  printf("Test number %d now" , 1);
+  printf("Test number %1d now" , 5234);
   printf("\n");
   printf("\n");
   
-  printf("SIMPLE  \n");
+  printf("WIDTH WITH * \n");
   printf("my_printf:");
-  my_printf("Test number %d" , 1);
+  my_printf("Test number %*d now" , 6, 5234);
   printf("\n   printf:");
-  printf("Test number %d" , 1);
+  printf("Test number %*d now" , 6, 5234);
   printf("\n");
   printf("\n");
   
-  
-  //Regular string
-  printf("REGULAR STRING  \n");
-  printf("my_printf:");
-  my_printf("Hello There!");
-  printf("\n   printf:");
-  printf("Hello There!");
-  printf("\n");
-  printf("\n");
-  
-  // No argument
-  printf("NO ARGUMENT \n");
-  printf("my_printf:");
-  my_printf("");
-  printf("\n   printf:");
-  printf("");
-  printf("\n");
 }
